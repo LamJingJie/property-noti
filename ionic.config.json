@@ -1,0 +1,7 @@
+{
+  "name": "property-noti",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
