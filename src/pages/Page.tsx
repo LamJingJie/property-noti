@@ -8,24 +8,26 @@ const Page: React.FC = () => {
   const { name } = useParams<{ name: string; }>();
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonMenuButton />
-          </IonButtons>
-          <IonTitle>{name}</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
+    <IonPage >
+      
+        <IonHeader class="header">
           <IonToolbar>
-            <IonTitle size="large">{name}</IonTitle>
+            <IonButtons slot="start">
+              <IonMenuButton />
+            </IonButtons>
+            <IonTitle>{name}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name={name} />
-      </IonContent>
+
+        <IonContent class="content"   fullscreen>
+          <div id="data-content">
+            <div>
+              <h5></h5>
+              <b>Data will appear here!</b>
+            </div>          
+          </div>
+        </IonContent>
+
     </IonPage>
   );
 };

@@ -82,6 +82,7 @@ http://ionicframework.com/docs/theming/ */
    * -------------------------------------------
    */
 
+
   body {
     --ion-color-primary: #428cff;
     --ion-color-primary-rgb: 66,140,255;
@@ -234,3 +235,27 @@ http://ionicframework.com/docs/theming/ */
     --ion-card-background: #1e1e1e;
   }
 }
+
+#data-content{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  color: whitesmoke;
+}
+
+#menu-item{
+  background:black;
+}
+
+.header{
+  --ion-background-color:rgb(252, 171, 21);
+  border-bottom: 4px solid rgb(230, 150, 2);
+}
+
+.content{
+  --ion-background-color:#000000cb;
+}
+
+
+
