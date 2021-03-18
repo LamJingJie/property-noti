@@ -1,0 +1,9 @@
+.background-img{
+    position: absolute;
+    bottom:0;
+    right:0;
+    overflow: visible;
+    max-width: 65%;
+    opacity: .35;
+    z-index: -999;
+}

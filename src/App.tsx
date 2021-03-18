@@ -23,6 +23,12 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+//Pages
+import Home from './pages/Home';
+import Outbox from './pages/Outbox';
+
+//Put firebase config here
+
 const App: React.FC = () => {
   return (
     <IonApp >
@@ -31,11 +37,13 @@ const App: React.FC = () => {
           <Menu />
           <IonRouterOutlet id="main">
             <Route path="/" exact={true}>
-              <Redirect to="/page/Home" />
+              <Redirect to="/page/home" />
             </Route>
-            <Route path="/page/:name" exact={true}>
-              <Page />
-            </Route>
+
+            <Route path="/page/home" component={Home} exact={true} /> 
+
+            <Route path="/page/outbox" component={Outbox} exact={true} /> 
+            
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>

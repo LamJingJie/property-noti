@@ -19,7 +19,7 @@ const Page: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        <IonContent class="content"   fullscreen>
+        <IonContent class="content"  fullscreen>
           <div id="data-content">
             <div>
               <h5></h5>

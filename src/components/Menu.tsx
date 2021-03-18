@@ -17,6 +17,14 @@ import {
 } from 'ionicons/icons';
 import './Menu.css';
 
+import { useForm } from "react-hook-form";
+
+//Import firebase
+import * as firebase from 'firebase';
+//firebase.default.firestore().collection('user').where('gender','==','female');
+
+import  fb  from '../firebaseConfig';
+
 interface AppPage {
   url: string;
   iosIcon: string;
@@ -27,13 +35,13 @@ interface AppPage {
 const appPages: AppPage[] = [
   {
     title: 'Home',
-    url: '/page/Home',
+    url: '/page/home',
     iosIcon: homeOutline,
     mdIcon: homeSharp
   },
   {
-    title: 'Upcoming datelines',
-    url: '/page/Outbox',
+    title: 'Expired',
+    url: '/page/outbox',
     iosIcon: calendarOutline,
     mdIcon: calendarSharp
   }
@@ -50,7 +58,7 @@ const Menu: React.FC = () => {
 
           <IonList id="inbox-list">
             <IonListHeader>Property-Noti</IonListHeader>
-            <IonNote>Sends msg of properties deadlines to Android Devices</IonNote>
+            <IonNote>Sends msg of properties deadlines to your device</IonNote>
             {appPages.map((appPage, index) => {
               return (
                 <IonMenuToggle key={index} autoHide={false}>

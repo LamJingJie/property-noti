@@ -239,13 +239,8 @@ http://ionicframework.com/docs/theming/ */
 #data-content{
   margin: 0;
   padding: 0;
-  height: 100%;
   width: 100%;
   color: whitesmoke;
-}
-
-#menu-item{
-  background:black;
 }
 
 .header{
@@ -254,7 +249,56 @@ http://ionicframework.com/docs/theming/ */
 }
 
 .content{
-  --ion-background-color:#000000cb;
+  --ion-background-color: 
+    linear-gradient(#000000cb, rgb(105, 105, 105) ) ;
+  --ion-text-color: whitesmoke;
+  --backdrop-opacity: 1 !important;
+}
+
+.background{
+  background: transparent;
+  padding: 7px;
+  width: 100%;
+}
+
+
+
+
+#menu-item{
+  background:black;
+}
+
+.transparent-btn{
+  --background: transparent !important;
+}
+
+.list{
+  background: transparent;
+  padding-bottom: 80px;
+}
+
+
+
+@keyframes changeSize{
+  from{
+   transform: scale(1);
+  }
+
+  to{
+    transform: scale(1.2);
+  }
+}
+
+.important{
+  position: absolute;
+  animation-duration: 1s;
+  animation-name: changeSize;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  color: rgb(255, 57, 57);
+  width: 100%;
+  top:10%;
+  text-align: center;
 }
 
 
