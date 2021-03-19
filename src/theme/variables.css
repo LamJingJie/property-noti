@@ -250,9 +250,10 @@ http://ionicframework.com/docs/theming/ */
 
 .content{
   --ion-background-color: 
-    linear-gradient(#000000cb, rgb(105, 105, 105) ) ;
+    linear-gradient(#1a1a1a, rgb(105, 105, 105) ) ;
   --ion-text-color: whitesmoke;
-  --backdrop-opacity: 1 !important;
+  
+  
 }
 
 .background{

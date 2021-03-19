@@ -2,3 +2,33 @@
     --color: #4b4741;
     color: var(--color);
 }
+
+.form{
+    padding: 15px;
+    position: relative;
+    bottom: 30%;
+}
+
+.formgroup{
+    padding: 5px;
+}
+
+.formitem{
+    --background: transparent;
+}
+
+.calendar{
+    border: 0;
+    color: var(--color);
+    background-color: rgb(252, 171, 21);
+}
+
+
+
+
+#label-txt{
+    padding: 5px;
+    width: 100%;
+    text-align: center;
+    text-decoration: underline;
+}

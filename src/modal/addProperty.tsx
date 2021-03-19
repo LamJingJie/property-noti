@@ -3,9 +3,15 @@ import './addProperty.css';
 import { IonContent, IonHeader, IonInput, IonPage, IonTitle, IonToolbar, IonButton, IonSelect,
 IonFab, IonFabButton, IonIcon, IonList, IonListHeader, useIonViewWillEnter, useIonViewWillLeave,
 withIonLifeCycle, IonItem, IonLabel, IonText, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, 
-IonCardContent, IonModal } from '@ionic/react';
+IonCardContent, IonModal, IonDatetime } from '@ionic/react';
 import { useParams } from 'react-router';
 import React, { useState, useEffect } from "react";
+import { useForm, Controller  } from "react-hook-form";
+import { Form, FormGroup, Label, Input, Button } from "reactstrap";
+
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 //Icons
 import {
@@ -19,25 +25,142 @@ import ExploreContainer from '../components/ExploreContainer';
 
 
   
-  const addProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
+
+  
+const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
+    const initialValues = {
+        propertyName: '',
+        address: '',
+        endTime: new Date()
+    }
+
+    //use states
+    const [date, setDate] = useState<Date>(new Date());
+    const [error, setError] = useState<string>();
+
+    const {reset, register, handleSubmit, errors, control,formState, setValue, getValues } = useForm({
+        mode: "onChange", //checks validation on every change
+        defaultValues: initialValues,
+    });
+
+
+    //function
+    const submitForm = (data: any)=>{
+        console.log(data);
+    }
+
+    const onErrors  = (errors : any) => {
+        console.log(errors);
+        setError(errors);
+    }
+
+    const resetForm = (val: string) =>{
+        console.log("Reset");
+        reset(initialValues)
+    }
+
+    const handleDateChange = (date: Date)=>{
+        console.log(date);
+        setDate(date);
+    }
+
+    const validationOptions={
+        propertyName: {
+          required: "Name needed"
+        },
+        address: {
+          required: "Address needed",
+         /* pattern: {
+            value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i,
+            message: "Invalid email address"
+          }*/
+        },
+        endTime:{
+          required: "End Date cannot be empty",
+          /*minLength:{
+            value: 8,
+            message: "Password must have at least 8 characters"
+          }*/
+        }
+    };
+
     return (
-        <div>
-            <IonModal isOpen={props.modal} cssClass="content">
-                <IonHeader class="header">
-                    <IonToolbar>
+        <IonModal isOpen={props.modal} cssClass="content">
+            <IonHeader class="header">
+                <IonToolbar>
 
-                        <IonTitle className="title">Add Property</IonTitle>
-                    </IonToolbar>
-                </IonHeader>
-                <div>
-                    <div id="data-content">Add Property form here!</div>
-                    <IonButton onClick={() => props.showModal(false)}>Close Modal</IonButton>
-                </div>
+                    <IonTitle className="title">Add Property</IonTitle>
+                </IonToolbar>
+            </IonHeader>
+            <div id="data-content" style={{padding:"10px"}}>
+                <Form onSubmit={handleSubmit(submitForm)} className="form">
+                    <IonCard style={{background: "transparent"}}>
+                        <FormGroup className="formgroup">
+                            <IonItem className="formitem">
+                                <IonLabel position="floating">Name</IonLabel>
+                                <IonInput
+                                //Did not use 'Controller' hook because its not supported by IonInput yet.
+                                //This is bullshit
+                                 required ref={register} name="propertyName" type="text"/>
 
-            </IonModal>
+                            </IonItem>
 
-        </div>
+                            <small className="error-msg"
+                            //Will only be useful when Ionic makes IonInput supportable by the 'Controller' hook.
+                            //Until then, the above code will do
+                            >
+                                {errors.propertyName && errors.propertyName.message}
+                            </small>
+                        </FormGroup>
+                        <FormGroup className="formgroup">
+                            <IonItem className="formitem">
+                                <IonLabel position="floating">Address</IonLabel>
+                                <IonInput
+                                //Did not use 'Controller' hook because its not supported by IonInput yet.
+                                //This is bullshit
+                                 required ref={register} name="address" type="text"/>
+
+                            </IonItem>
+                            <small className="error-msg"
+                            //Will only be useful when Ionic makes IonInput supportable by the 'Controller' hook.
+                            //Until then, the above code will do
+                            >
+                                {errors.address && errors.address.message}
+                            </small>
+                        </FormGroup>
+                    </IonCard>
+
+                        <FormGroup className="formgroup">
+
+                            <div id="label-txt">End Date</div>
+                            <IonInput
+                                //Did not use 'Controller' hook because its not supported by IonInput yet.
+                                //This is bullshit
+                                 required ref={register} name="endTime" type="date"/>
+
+                            <small className="error-msg"
+                            //Will only be useful when Ionic makes IonInput supportable by the 'Controller' hook.
+                            //Until then, the above code will do
+                            >
+                                {errors.endTime && errors.endTime.message}
+                            </small>
+                        </FormGroup>
+                       
+                    <div style={{padding: '10px',display:'flex'}}>
+                        <IonButton style={{flex: '1'}} type="submit"  color="primary"
+                        disabled={formState.isValid === false}
+                        >Submit</IonButton>
+                        <IonButton style={{flex: '1'}} onClick={() => resetForm("Reset")}>Reset</IonButton>
+                    </div>
+                   
+                </Form>
+            </div>
+            <IonButton onClick={() => props.showModal(false)}>Close Modal</IonButton>
+
+
+        </IonModal>
+
     );
   };
   
-  export default addProperty;
+  export default AddProperty;
