@@ -3,7 +3,7 @@ import './addProperty.css';
 import { IonContent, IonHeader, IonInput, IonPage, IonTitle, IonToolbar, IonButton, IonSelect,
 IonFab, IonFabButton, IonIcon, IonList, IonListHeader, useIonViewWillEnter, useIonViewWillLeave,
 withIonLifeCycle, IonItem, IonLabel, IonText, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, 
-IonCardContent, IonModal, IonDatetime } from '@ionic/react';
+IonCardContent, IonModal, IonDatetime, IonLoading } from '@ionic/react';
 import { useParams } from 'react-router';
 import React, { useState, useEffect } from "react";
 import { useForm, Controller  } from "react-hook-form";
@@ -39,6 +39,7 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
 
     //use states
     const [error, setError] = useState<string>();
+    const [showLoading, setShowLoading] = useState(false);
 
     const {reset, register, handleSubmit, errors, control,formState, setValue, getValues } = useForm({
         mode: "onChange", //checks validation on every change
@@ -48,11 +49,19 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
 
 
     //function
-    const submitForm = (data: any)=>{
+    const submitForm = async (data: any)=>{
         console.log(data.propertyName);
         console.log(data.address);
         console.log(data.endTime);
 
+        //Wait for the system to add into the firebase before proceeding
+        setShowLoading(true);
+
+        setTimeout(() => {
+            setShowLoading(false);
+        }, 2000);
+
+        await props.showModal(false);
         resetForm("Reset");
     }
 
@@ -89,6 +98,11 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
 
     return (
         <IonModal isOpen={props.modal} cssClass="content">
+            <IonLoading
+                cssClass='my-custom-class'
+                isOpen={showLoading}
+                message={'Please wait...'}
+            />
             <IonHeader class="header">
                 <IonToolbar>
                     <IonTitle className="title">Add Property</IonTitle>
@@ -103,6 +117,10 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                                
                                 <Controller
                                 /*
+                                  Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                  resetted for the client side. So you need to add it with the 'value' props inside 
+                                  the curly braces.
+
                                   Only on IONIC component that needs to be done like this. For others, can just use the
                                   standard method in which u can just replace the 'render' parameter with the 'as' parameter
                                   and in the 'as' parameter, you can just input the IONIC component inside the curly braces
@@ -126,6 +144,10 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                                
                                 <Controller
                                 /*
+                                  Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                  resetted for the client side. So you need to add it with the 'value' props inside 
+                                  the curly braces.
+
                                   Only on IONIC component that needs to be done like this. For others, can just use the
                                   standard method in which u can just replace the 'render' parameter with the 'as' parameter
                                   and in the 'as' parameter, you can just input the IONIC component inside the curly braces
@@ -150,6 +172,10 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                             
                             <Controller
                             /*
+                              Need to add the 'value' parameter because otherwise, the value displayed will not be
+                              resetted for the client side. So you need to add it with the 'value' props inside 
+                              the curly braces.
+
                               Only on IONIC component that needs to be done like this. For others, can just use the
                               standard method in which u can just replace the 'render' parameter with the 'as' parameter
                               and in the 'as' parameter, you can just input the IONIC component inside the curly braces
