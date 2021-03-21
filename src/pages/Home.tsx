@@ -1,7 +1,7 @@
 import './Home.css';
 
 import { IonContent, IonHeader, IonInput, IonPage, IonTitle, IonToolbar, IonButton, IonSelect,
-IonFab, IonFabButton, IonIcon, IonList, IonListHeader, useIonViewWillEnter, useIonViewWillLeave,
+IonFab, IonFabButton, IonIcon, IonList, IonListHeader, useIonViewWillEnter, useIonViewWillLeave, 
 withIonLifeCycle, IonItem, IonLabel, IonText, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, 
 IonCardContent, IonModal } from '@ionic/react';
 import { useParams } from 'react-router';
@@ -35,7 +35,22 @@ const Home: React.FC = () => {
     let unsub_get: () => void; //store listener
 
     const [addProp_Modal, setAdd_Modal] = useState(false);
- 
+
+    /*
+    This will be done in the future, if there's time
+    const override_bck_btn = () =>{
+        console.log("Override back btn here");
+        
+        if(addProp_Modal === false){
+            //If false, override back btn
+            console.log("False");
+        }else{
+            //If true, cancel it and return to normal
+            console.log("True");
+        }
+        
+    }
+    */
 
     useIonViewWillEnter(()=>{
 

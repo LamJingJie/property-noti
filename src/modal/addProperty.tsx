@@ -38,7 +38,6 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
     }
 
     //use states
-    const [currdate, setDate] = useState<Date>(new Date());
     const [error, setError] = useState<string>();
 
     const {reset, register, handleSubmit, errors, control,formState, setValue, getValues } = useForm({
@@ -53,6 +52,8 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
         console.log(data.propertyName);
         console.log(data.address);
         console.log(data.endTime);
+
+        resetForm("Reset");
     }
 
     const onErrors  = (errors : any) => {
@@ -65,10 +66,6 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
         reset(initialValues);
     }
 
-    const handleDateChange = (date: Date)=>{
-        console.log(date);
-        setDate(date);
-    }
 
     const validationOptions={
         propertyName: {
@@ -94,7 +91,6 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
         <IonModal isOpen={props.modal} cssClass="content">
             <IonHeader class="header">
                 <IonToolbar>
-
                     <IonTitle className="title">Add Property</IonTitle>
                 </IonToolbar>
             </IonHeader>
@@ -106,20 +102,21 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                                 <IonLabel position="floating">Name</IonLabel>
                                
                                 <Controller
+                                /*
+                                  Only on IONIC component that needs to be done like this. For others, can just use the
+                                  standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                  and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                  E.g. as={<input type="number" />}
+                                */
                                     render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
                                     control={control}
                                     name="propertyName"
                                     rules={validationOptions.propertyName}
-                                />
-                                
-                                 
+                                />                                                     
 
                             </IonItem>
 
-                            <small className="error-msg"
-                            //Will only be useful when Ionic makes IonInput supportable by the 'Controller' hook.
-                            //Until then, the above code will do
-                            >
+                            <small className="error-msg">
                                 {errors.propertyName && errors.propertyName.message}
                             </small>
                         </FormGroup>
@@ -128,18 +125,20 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                                 <IonLabel position="floating">Address</IonLabel>
                                
                                 <Controller
+                                /*
+                                  Only on IONIC component that needs to be done like this. For others, can just use the
+                                  standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                  and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                  E.g. as={<input type="number" />}
+                                */
                                     render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
                                     control={control}
                                     name="address"
                                     rules={validationOptions.address}
                                 />
                                
-
                             </IonItem>
-                            <small className="error-msg"
-                            //Will only be useful when Ionic makes IonInput supportable by the 'Controller' hook.
-                            //Until then, the above code will do
-                            >
+                            <small className="error-msg">
                                 {errors.address && errors.address.message}
                             </small>
                         </FormGroup>
@@ -150,17 +149,19 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                             <div id="label-txt">End Date</div>
                             
                             <Controller
+                            /*
+                              Only on IONIC component that needs to be done like this. For others, can just use the
+                              standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                              and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                              E.g. as={<input type="number" />}
+                            */
                                     render={({ onChange, onBlur, value }) => (<IonInput value={value} type="date" onIonChange={onChange} />)}
                                     control={control}
                                     name="endTime"
                                     rules={validationOptions.endTime}
                             />
                            
-
-                            <small className="error-msg"
-                            //Will only be useful when Ionic makes IonInput supportable by the 'Controller' hook.
-                            //Until then, the above code will do
-                            >
+                            <small className="error-msg">
                                 {errors.endTime && errors.endTime.message}
                             </small>
                         </FormGroup>
@@ -168,14 +169,13 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                     <div style={{padding: '10px',display:'flex'}}>
                         <IonButton style={{flex: '1'}} type="submit"  color="success"
                         disabled={formState.isValid === false}
-                        >Submit</IonButton>
+                        >Add</IonButton>
                         <IonButton color="danger" style={{flex: '1'}} onClick={() => resetForm("Reset")}>Reset</IonButton>
-                    </div>
-                   
+                    </div>                 
                 </Form>
             </div>
-            <IonButton color="dark" fill="solid" onClick={() => props.showModal(false)}>Close</IonButton>
 
+            <IonButton color="dark" fill="solid" onClick={() => props.showModal(false)}>Close</IonButton>
 
         </IonModal>
 
