@@ -13,6 +13,9 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
+import { object, string } from 'yup';
+import Moment from 'moment'
+
 //Icons
 import {
     archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp,
@@ -31,22 +34,25 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
     const initialValues = {
         propertyName: '',
         address: '',
-        endTime: new Date()
+        endTime:  Moment((new Date()).toString()).format('YYYY-MM-DD')
     }
 
     //use states
-    const [date, setDate] = useState<Date>(new Date());
+    const [currdate, setDate] = useState<Date>(new Date());
     const [error, setError] = useState<string>();
 
     const {reset, register, handleSubmit, errors, control,formState, setValue, getValues } = useForm({
         mode: "onChange", //checks validation on every change
         defaultValues: initialValues,
+        
     });
 
 
     //function
     const submitForm = (data: any)=>{
-        console.log(data);
+        console.log(data.propertyName);
+        console.log(data.address);
+        console.log(data.endTime);
     }
 
     const onErrors  = (errors : any) => {
@@ -56,7 +62,7 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
 
     const resetForm = (val: string) =>{
         console.log("Reset");
-        reset(initialValues)
+        reset(initialValues);
     }
 
     const handleDateChange = (date: Date)=>{
@@ -98,10 +104,15 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                         <FormGroup className="formgroup">
                             <IonItem className="formitem">
                                 <IonLabel position="floating">Name</IonLabel>
-                                <IonInput
-                                //Did not use 'Controller' hook because its not supported by IonInput yet.
-                                //This is bullshit
-                                 required ref={register} name="propertyName" type="text"/>
+                               
+                                <Controller
+                                    render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
+                                    control={control}
+                                    name="propertyName"
+                                    rules={validationOptions.propertyName}
+                                />
+                                
+                                 
 
                             </IonItem>
 
@@ -115,10 +126,14 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                         <FormGroup className="formgroup">
                             <IonItem className="formitem">
                                 <IonLabel position="floating">Address</IonLabel>
-                                <IonInput
-                                //Did not use 'Controller' hook because its not supported by IonInput yet.
-                                //This is bullshit
-                                 required ref={register} name="address" type="text"/>
+                               
+                                <Controller
+                                    render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
+                                    control={control}
+                                    name="address"
+                                    rules={validationOptions.address}
+                                />
+                               
 
                             </IonItem>
                             <small className="error-msg"
@@ -133,10 +148,14 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                         <FormGroup className="formgroup">
 
                             <div id="label-txt">End Date</div>
-                            <IonInput
-                                //Did not use 'Controller' hook because its not supported by IonInput yet.
-                                //This is bullshit
-                                 required ref={register} name="endTime" type="date"/>
+                            
+                            <Controller
+                                    render={({ onChange, onBlur, value }) => (<IonInput value={value} type="date" onIonChange={onChange} />)}
+                                    control={control}
+                                    name="endTime"
+                                    rules={validationOptions.endTime}
+                            />
+                           
 
                             <small className="error-msg"
                             //Will only be useful when Ionic makes IonInput supportable by the 'Controller' hook.
@@ -147,15 +166,15 @@ const AddProperty: React.FC<{modal:boolean,showModal: any}> =  props => {
                         </FormGroup>
                        
                     <div style={{padding: '10px',display:'flex'}}>
-                        <IonButton style={{flex: '1'}} type="submit"  color="primary"
+                        <IonButton style={{flex: '1'}} type="submit"  color="success"
                         disabled={formState.isValid === false}
                         >Submit</IonButton>
-                        <IonButton style={{flex: '1'}} onClick={() => resetForm("Reset")}>Reset</IonButton>
+                        <IonButton color="danger" style={{flex: '1'}} onClick={() => resetForm("Reset")}>Reset</IonButton>
                     </div>
                    
                 </Form>
             </div>
-            <IonButton onClick={() => props.showModal(false)}>Close Modal</IonButton>
+            <IonButton color="dark" fill="solid" onClick={() => props.showModal(false)}>Close</IonButton>
 
 
         </IonModal>
