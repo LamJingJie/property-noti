@@ -1,0 +1,21 @@
+#calendar .fc-header-toolbar{
+    font-size: 10px;
+}
+#calendarContainer{
+    padding: 10px;
+    padding-bottom:15%;
+    height: 100%;
+}
+
+#calendarEvent{
+    height: 25%;
+    --background: transparent;
+    background: transparent;
+}
+
+
+
+
+
+
+

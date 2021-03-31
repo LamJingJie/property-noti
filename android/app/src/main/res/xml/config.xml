@@ -6,6 +6,10 @@
     <param name="android-package" value="de.appplant.cordova.plugin.badge.Badge"/>
   </feature>
 
+  <feature name="Calendar">
+    <param name="android-package" value="nl.xservices.plugins.Calendar"/>
+  </feature>
+
   <feature name="Device">
     <param name="android-package" value="org.apache.cordova.device.Device"/>
   </feature>
