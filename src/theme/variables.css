@@ -307,3 +307,9 @@ http://ionicframework.com/docs/theming/ */
   top:10%;
   text-align: center;
 }
+
+
+
+.end-of-item-general{
+  border-bottom: 1px solid darkgray;
+}

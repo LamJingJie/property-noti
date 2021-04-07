@@ -122,9 +122,9 @@ const Home: React.FC = (props) => {
         //history.push('/page/home/event');  
     }
 
-    const test123 = ()=>{
+    const onSelectEvent = (event: any)=>{
         console.log("Test123");
-        console.log(propData);
+        console.log(event);
     }
 
     useIonViewDidEnter(()=>{
@@ -243,9 +243,11 @@ const Home: React.FC = (props) => {
                                 </IonCardHeader>
                                 {popoverData
                                     .map((val, index) => (
-                                        <IonItem key={index} className="background">
-                                            <IonText>List Item {val.title}</IonText>
-                                        </IonItem>
+                                        <IonButton onClick={()=> eventSelect(val)} key={index} className="background strip-shadow end-of-item-general">
+                                            <IonItem className="background">
+                                                <IonText style={{ float: 'left' }}>{val.title}</IonText>
+                                            </IonItem>
+                                        </IonButton>
                                     ))}
                             </IonCard>
                         </IonList>

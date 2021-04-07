@@ -93,13 +93,13 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
                 <div className="content_event" >                
                         <div className="grid-container">
                             <IonIcon id="title-icon" className='icon' color="secondary" md={text} />
-                            <IonText id="title-txt" className='text end-of-item' >{event?.title}</IonText>
+                            <IonText id="title-txt" className='text end-of-item-event' >{event?.title}</IonText>
                             
                             <IonIcon id="address-icon" className='icon' color="secondary" md={locationOutline} />
-                            <IonText id="address-txt" className='text end-of-item' >{event?.address}</IonText>
+                            <IonText id="address-txt" className='text end-of-item-event' >{event?.address}</IonText>
 
                             <IonIcon id="time-icon" className='icon' color="secondary" md={timeOutline} />
-                            <div id="time-txt" className="text end-of-item">
+                            <div id="time-txt" className="text end-of-item-event">
                                 <div className="time-content text">Start: {moment(event?.start.toString()).format('dddd MMMM D YYYY')}</div>
                                 <div className="time-content">End: {moment(event?.end.toString()).format('dddd MMMM D YYYY')}</div>
                                 <div className="time-content">Notify: {moment(event?.noti.toString()).format('dddd MMMM D YYYY')}</div>
