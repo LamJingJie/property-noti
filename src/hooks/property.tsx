@@ -7,8 +7,10 @@ import { isPlatform } from '@ionic/react';
 
 import { Storage, Drivers } from '@ionic/storage';
 
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
+
 export interface Property{
-    id: number,
+    id: string,
     title: string,
     address: string,
     allDay: boolean,
@@ -20,6 +22,16 @@ export interface Property{
 
 
 const ITEMS_KEY = 'my-property';
+const subject = new Subject();
+export const bsubject = new BehaviorSubject([]);
+
+/*export const messageService = {
+    sendMessage: (message: any) => subject.next({ text: message }),
+    clearMessages: () => subject.next(),
+    onMessage: () => subject.asObservable(),
+    
+   
+};*/
 
 const storage = new Storage({
     driverOrder: [Drivers.SecureStorage, Drivers.IndexedDB, Drivers.LocalStorage]
@@ -54,11 +66,23 @@ export function addProperty(item: Property): Promise<any> {
 
 //retrieve
 export function getProperty(): Promise<Property[]> {
-
-
+    
     return storage.get(ITEMS_KEY);
 
 }
+
+
+//retrieve
+/*export function jingjie(): Observable<any> {
+    return subject.asObservable();
+    
+}*/
+
+export const propertyService = {
+    sendProperty: (prop: any)=> subject.next(prop), //use this for subsequent refresh, for when u add, edit or del property
+    onProperty: () => subject.asObservable(),
+   
+};
 
 
 //update
@@ -80,26 +104,31 @@ export function editProperty(item: Property): Promise<any> {
             }
         }
 
-        await storage.set(ITEMS_KEY, updatedItems); //override prev values array
+        return await storage.set(ITEMS_KEY, updatedItems); //override prev values array
     });
 }
 
 
 //delete
-export function delProperty(id: number): Promise<any> {
-    return storage.get(ITEMS_KEY).then(async(items: Property[]) =>{
-        if(!items || items.length === 0){
-            return null;
-        }
+export function delProperty(id: string): Promise<any> {
+    //console.log(id);
 
-        //Determine which array is to be kept
-        let toKeep: Property[] = [];
-        for(let i of items){
-            if(i.id === id){
-                toKeep.push(i);
+        return storage.get(ITEMS_KEY).then(async(items: Property[]) =>{
+            if(!items || items.length === 0){
+                return null;
             }
-        }
+    
+            //Determine which array is to be kept
+            let toKeep: Property[] = [];
+            for(let i of items){
+                if(i.id !== id){
+                    toKeep.push(i);
+                }
+            }
+            //console.log(toKeep);
+    
+            return await storage.set(ITEMS_KEY, toKeep);
 
-        await storage.set(ITEMS_KEY, toKeep);
-    })
+        })
+   
 }

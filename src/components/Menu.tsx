@@ -40,7 +40,7 @@ const appPages: AppPage[] = [
     mdIcon: homeSharp
   },
   {
-    title: 'Expired',
+    title: 'About',
     url: '/page/outbox',
     iosIcon: calendarOutline,
     mdIcon: calendarSharp

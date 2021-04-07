@@ -6,11 +6,12 @@ withIonLifeCycle, IonItem, IonLabel, IonText, IonCard, IonCardHeader, IonCardSub
 IonCardContent, IonModal, isPlatform,getPlatforms, useIonViewDidEnter, useIonViewDidLeave, IonGrid, IonRow, IonCol } from '@ionic/react';
 import { useParams } from 'react-router';
 import React, { useState, useEffect } from "react";
+import { useHistory } from 'react-router-dom';
 
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-
+import { Subscription } from 'rxjs';
 
 //Icons
 import {
@@ -20,7 +21,7 @@ import {
   } from 'ionicons/icons';
 
 //CRUD
-import { getProperty, Property } from '../hooks/property';
+import { getProperty, Property, propertyService } from '../hooks/property';
 
 //Title & Menu function
 import ExploreContainer from '../components/ExploreContainer';
@@ -30,9 +31,7 @@ import PageDesign from '../components/pageDesign';
 
 //modals
 import AddProperty from '../modal/addProperty';
-
-
-import { Subscription } from 'rxjs';
+import Event from '../modal/Event';
 
 
 //import { Calendar } from '@fullcalendar/core';
@@ -43,6 +42,8 @@ import listPlugin from '@fullcalendar/list';
 
 
 const Home: React.FC = (props) => {
+    let propertySubscription: Subscription;
+    const history = useHistory();
     const localizer = momentLocalizer(moment);
     let unsub_get: () => void; //store listener
     const now = new Date();
@@ -50,8 +51,11 @@ const Home: React.FC = (props) => {
 
     //use state
     const [addProp_Modal, setAdd_Modal] = useState(false);
+    const [showEvent, setShowEvent] = useState(false);
+
     const [chosenDate, setChosenDate] = useState<string>();
     const [propData, setPropData] = useState<Property[]>([]);
+    const [selectedEvent, setSelectedEvent] = useState<object>();
     const [popoverData, setPopoverData] = useState<Property[]>([]);
     let calendar: any;
     /*
@@ -112,7 +116,15 @@ const Home: React.FC = (props) => {
    
 
     const eventSelect = (event: object) =>{
-        console.log(event);
+        //console.log(event);
+        setSelectedEvent(event);
+        setShowEvent(true);
+        //history.push('/page/home/event');  
+    }
+
+    const test123 = ()=>{
+        console.log("Test123");
+        console.log(propData);
     }
 
     useIonViewDidEnter(()=>{
@@ -120,16 +132,38 @@ const Home: React.FC = (props) => {
     })
 
 
-    useIonViewWillEnter(()=>{
-        let property_data;
+    useIonViewWillEnter(()=>{       
+        /*propertySubscription = jingjie().subscribe((data: any)=>{
+            
+            console.log("Start");
+            if(data){
+                console.log(data);
+                setPropData((datas: any) => [...datas, data]);
+            }else{
+                console.log("Empty");
+                setPropData([]);
+            }         
+        });*/
+        /*bsubject.subscribe((data: any) =>{
+            console.log("HIIII");
+            getProperty().then((async res=>{
+                if(res){
+                    setPropData(res);
+                    console.log("Data");
+                    console.log(res);
+                }
+            }));
+        });*/
+        propertySubscription= propertyService.onProperty().subscribe((res: any)=>{
+            console.log(res);
+            setPropData(res);
+        });
         getProperty().then((async res=>{
-            property_data = res;
-            if(property_data){
-                setPropData(property_data);
-                console.log("Data");
-                console.log(property_data);
+            if(res){
+                propertyService.sendProperty(res);
             }
         }));
+ 
 
         /*unsub_get = getProperty(true).onSnapshot((snapshot) => {
             //...
@@ -159,8 +193,11 @@ const Home: React.FC = (props) => {
 
 
     useIonViewWillLeave(()=>{
-        /*
         //Unsubscribe / Stop listening
+        if(propertySubscription){
+            propertySubscription.unsubscribe();
+        }   
+        /*
         if(unsub_get){
             unsub_get();
         }*/
@@ -176,6 +213,7 @@ const Home: React.FC = (props) => {
             <ExploreContainer name={"Home"} />
  
             <IonContent class="content"  fullscreen>
+ 
                 <div id="calendarContainer">
                     <Calendar
                         localizer={localizer}
@@ -188,14 +226,14 @@ const Home: React.FC = (props) => {
                         onShowMore={(events, date) => {
                             //console.log(events);
                             console.log(date);
-                            let date_converted: string = moment(date).format('DD-MM-YYYY');
+                            let date_converted: string = moment(date).format('MMMM Do YYYY');
                             setChosenDate(date_converted);
                             setPopoverData(events);
                         }}
                         onSelectEvent={event => eventSelect(event)}
                         views={['month', 'week', 'agenda']}
                         events={propData}
-                        style={{ height: '75%' }}
+                        style={{ height: '80%' }}
                     />
                     <IonContent id="calendarEvent" scrollEvents={true}>
                         <IonList className="background">
@@ -212,8 +250,8 @@ const Home: React.FC = (props) => {
                             </IonCard>
                         </IonList>
                     </IonContent>
-                </div>
-                <AddProperty setPropData={setPropData} modal={addProp_Modal} showModal={setAdd_Modal}  />               
+                    
+                </div>                  
 
                 <IonFab  slot="fixed" vertical="bottom" horizontal="end">
                     <IonFabButton class="transparent-btn" size="small" onClick={() => setAdd_Modal(true)} >
@@ -223,6 +261,9 @@ const Home: React.FC = (props) => {
 
                 <PageDesign />
             </IonContent>
+            <AddProperty setPropData={setPropData} modal={addProp_Modal} showModal={setAdd_Modal}  />
+            <Event modal={showEvent} setShowModal={setShowEvent} data={selectedEvent!} />
+
         </IonPage>
        
     );

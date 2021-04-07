@@ -43,6 +43,7 @@ const App: React.FC = () => {
             <Route path="/page/home" component={Home} exact={true} /> 
 
             <Route path="/page/outbox" component={Outbox} exact={true} /> 
+
             
           </IonRouterOutlet>
         </IonSplitPane>

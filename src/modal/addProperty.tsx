@@ -29,12 +29,13 @@ import Moment from 'moment'
 import ExploreContainer from '../components/ExploreContainer';
 
 //firebase
-import { addProperty, getProperty, Property } from '../hooks/property';
+import { addProperty, getProperty, Property, propertyService } from '../hooks/property';
 
   
 
   
 const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> =  props => {
+
     
     const today: Date = new Date();
     const tmr: string = Moment((new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0,0,0,0)).toString()).format('YYYY-MM-DD');
@@ -82,10 +83,10 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
 
         let end: Date = Moment(data.end).toDate();
         let end_converted_number: number = end.setHours(0,0,0,0);
-        console.log(end);
+        //console.log(end);
 
         let noti: Date = Moment(data.noti).toDate();
-        console.log(noti);
+        //console.log(noti);
         let noti_converted_number: number = noti.setHours(0,0,0,0);
           
         data.id = id;
@@ -94,7 +95,7 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
         data.end = end;
         data.noti = noti;
 
-        console.log(data);
+        //console.log(data);
 
         //console.log(beginTime_converted_number);
         //console.log(endTime_converted_number);
@@ -107,7 +108,10 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
             console.log("Different");
             //Wait for the system to add into the firebase before proceeding
             setShowLoading(true);
+
             addProperty(data).then((async res=>{
+                //console.log(res);
+                propertyService.sendProperty(res);
                 resetForm("reset");
                 await props.showModal(false);
                 setShowLoading(false);
@@ -152,11 +156,11 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
 
     const onDismiss = () =>{
         props.showModal(false);
-        getProperty().then((async res=>{
+        /*getProperty().then((async res=>{
             if(res){
                 props.setPropData(res);
             }
-        }));
+        }));*/
     }
 
 
@@ -329,7 +333,7 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
                 isOpen={showToast}
                 onDidDismiss={() => setShowToast(false)}
                 message={msg}
-                duration={10000}
+                duration={5000}
                 buttons={[
                     {
                       text: 'ok',

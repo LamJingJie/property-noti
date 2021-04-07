@@ -9,13 +9,13 @@ interface ContainerProps {
 const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   return (
     <IonHeader class="header">
-          <IonToolbar>
-            <IonButtons slot="start">
-              <IonMenuButton />
-            </IonButtons>
-            <IonTitle>{name}</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+      <IonToolbar>
+        <IonButtons slot="start">
+          <IonMenuButton />
+        </IonButtons>
+        <IonTitle>{name}</IonTitle>
+      </IonToolbar>
+    </IonHeader>
   );
 };
 
