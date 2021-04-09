@@ -1,16 +1,16 @@
 # property-noti
-Sends notifications to 1 device (admin) when property rental is expiring soon
 
-Built solely for the use of 1 person (my dad) and so will not have any login or signup. 
-Will only just keep the device id and send notifications to that device.
+This application was made by only me for someone close to me.
 
-
-Framework
+It is build using
 - Ionic 5
 - React
-
-Languages
+- LocalStorage
 - Typescript
 
-Database
-- Cloud Firebase
+Sends Notification to device when an property-event is nearing (can be set by the user) at 12am. However, the Notification. Date cannot be set after the End Date. 
+
+Based on the specification provided by the requester, there will be no setting of times allowed (e.g. 10am - 10pm, etc)
+
+This application does not require internet to function. As data is stored inside your device cache (localstorage).
+
