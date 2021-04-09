@@ -114,17 +114,11 @@ const Home: React.FC = (props) => {
        
    }, [])
    
-
     const eventSelect = (event: object) =>{
         //console.log(event);
         setSelectedEvent(event);
         setShowEvent(true);
         //history.push('/page/home/event');  
-    }
-
-    const onSelectEvent = (event: any)=>{
-        console.log("Test123");
-        console.log(event);
     }
 
     useIonViewDidEnter(()=>{

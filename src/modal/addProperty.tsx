@@ -3,12 +3,12 @@ import './addProperty.css';
 import { IonContent, IonHeader, IonInput, IonPage, IonTitle, IonToolbar, IonButton, IonSelect,
 IonFab, IonFabButton, IonIcon, IonList, IonListHeader, useIonViewWillEnter, useIonViewWillLeave,
 withIonLifeCycle, IonItem, IonLabel, IonText, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, 
-IonCardContent, IonModal, IonDatetime, IonLoading, IonToast } from '@ionic/react';
+IonCardContent, IonModal, IonDatetime, IonLoading, IonToast, IonButtons, IonSelectOption } from '@ionic/react';
 //Icons
 import {
     archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp,
     trashOutline, trashSharp, warningOutline, warningSharp, homeSharp, homeOutline, calendarSharp, calendarOutline,
-    addCircleOutline, addCircle, addCircleSharp, addSharp
+    addCircleOutline, addCircle, addCircleSharp, addSharp, arrowBackSharp
   } from 'ionicons/icons';
 
 import { useParams } from 'react-router';
@@ -38,15 +38,17 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
 
     
     const today: Date = new Date();
+    const today_convert: string = Moment(today.toString()).format('YYYY-MM-DD');
     const tmr: string = Moment((new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0,0,0,0)).toString()).format('YYYY-MM-DD');
-    //console.log(tmr);
 
 
     const initialValues = {
         title: '',
         address: '',
+        start: today_convert,
         end:  tmr,
         noti:  tmr,
+        allDay: true
     }
     
 
@@ -175,6 +177,9 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
             message: "Invalid email address"
           }*/
         },
+        start:{
+            required: "Start Date cannot be empty",
+        },
         end:{
           required: "End Date cannot be empty",
           /*minLength:{
@@ -184,151 +189,206 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
         },
         noti:{
             required: "Notification Date cannot be empty",
-            
-            /*minLength:{
-              value: 8,
-              message: "Password must have at least 8 characters"
-            }*/
-          }
+        },
+        allDay:{
+            required: "'All Day' cannot be empty",
+        }
     };
 
     return (
-        <IonModal onDidDismiss={() => onDismiss()} isOpen={props.modal} cssClass="content">
+        <IonModal animated={true} swipeToClose={true} onDidDismiss={() => onDismiss()} isOpen={props.modal} cssClass="content">
             <IonLoading
                 cssClass='my-custom-class'
                 isOpen={showLoading}
-                message={'Please wait...'}
+                message={'Adding...'}
                 onDidDismiss={() => setShowLoading(false)}
             />
             <IonHeader class="header">
                 <IonToolbar>
+                    <IonButtons slot="start"  onClick={() => onDismiss()}>
+                        <IonIcon size="large" style={{color:'black'}} md={arrowBackSharp}></IonIcon>
+                    </IonButtons>
                     <IonTitle className="title">Add Property</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <div id="data-content" style={{padding:"10px"}}>
-                <div id="info">
-                    <b>"Notification date"</b> can't be later than the <b>"End Date"</b>!                
+            <IonContent style={{ height: '100%' }}>
+                <div id="data-content" style={{ padding: "20px" }}>
+                    <div id="info">
+                        <b>"Notification date"</b> can't be later than the <b>"End Date"</b>!
+                    </div>
+                    <Form onSubmit={handleSubmit(submitForm)} className="form">
+                        <IonCard style={{ background: "transparent" }}>
+                            <FormGroup className="formgroup">
+                                <IonItem className="formitem">
+                                    <IonLabel position="floating">Name</IonLabel>
+
+                                    <Controller
+                                        /*
+                                          Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                          resetted for the client side. So you need to add it with the 'value' props inside 
+                                          the curly braces.
+        
+                                          Only on IONIC component that needs to be done like this. For others, can just use the
+                                          standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                          and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                          E.g. as={<input type="number" />}
+                                        */
+                                        render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
+                                        control={control}
+                                        name="title"
+                                        rules={validationOptions.title}
+                                    />
+
+                                </IonItem>
+
+                                <small className="error-msg">
+                                    {errors.title && errors.title.message}
+                                </small>
+                            </FormGroup>
+                            <FormGroup className="formgroup">
+                                <IonItem className="formitem">
+                                    <IonLabel position="floating">Address</IonLabel>
+
+                                    <Controller
+                                        /*
+                                          Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                          resetted for the client side. So you need to add it with the 'value' props inside 
+                                          the curly braces.
+        
+                                          Only on IONIC component that needs to be done like this. For others, can just use the
+                                          standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                          and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                          E.g. as={<input type="number" />}
+                                        */
+                                        render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
+                                        control={control}
+                                        name="address"
+                                        rules={validationOptions.address}
+                                    />
+
+                                </IonItem>
+                                <small className="error-msg">
+                                    {errors.address && errors.address.message}
+                                </small>
+                            </FormGroup>
+                        </IonCard>
+                        <FormGroup className="formgroup">
+
+                            <div id="label-txt">Start Date</div>
+
+                            <Controller
+                                /*
+                                  Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                  resetted for the client side. So you need to add it with the 'value' props inside 
+                                  the curly braces.
+                                
+                                  Only on IONIC component that needs to be done like this. For others, can just use the
+                                  standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                  and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                  E.g. as={<input type="number" />}
+                                */
+                                render={({ onChange, onBlur, value }) => (<IonInput disabled={true} value={value} min={today_convert} type="date" onIonChange={onChange} />)}
+                                control={control}
+                                name="start"
+                                rules={validationOptions.start}
+                            />
+
+                            <small className="error-msg">
+                                {errors.start && errors.start.message}
+                            </small>
+                        </FormGroup>
+
+                        <FormGroup className="formgroup">
+
+                            <div id="label-txt">End Date</div>
+
+                            <Controller
+                                /*
+                                  Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                  resetted for the client side. So you need to add it with the 'value' props inside 
+                                  the curly braces.
+    
+                                  Only on IONIC component that needs to be done like this. For others, can just use the
+                                  standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                  and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                  E.g. as={<input type="number" />}
+                                */
+                                render={({ onChange, onBlur, value }) => (<IonInput value={value} min={tmr} type="date" onIonChange={onChange} />)}
+                                control={control}
+                                name="end"
+                                rules={validationOptions.end}
+                            />
+
+                            <small className="error-msg">
+                                {errors.end && errors.end.message}
+                            </small>
+                        </FormGroup>
+
+                        <FormGroup className="formgroup">
+
+                            <div id="label-txt">Notification Date</div>
+
+                            <Controller
+                                /*
+                                  Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                  resetted for the client side. So you need to add it with the 'value' props inside 
+                                  the curly braces.
+                                
+                                  Only on IONIC component that needs to be done like this. For others, can just use the
+                                  standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                  and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                  E.g. as={<input type="number" />}
+                                */
+                                render={({ onChange, onBlur, value }) => (<IonInput value={value} min={tmr} type="date" onIonChange={onChange} />)}
+                                control={control}
+                                name="noti"
+                                rules={validationOptions.noti}
+                            />
+
+                            <small className="error-msg">
+                                {errors.noti && errors.noti.message}
+                            </small>
+                        </FormGroup>
+
+                        <FormGroup className="formgroup" disabled={true}>
+
+                            <div id="label-txt">All Day</div>
+
+                            <Controller
+                                /*
+                                  Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                  resetted for the client side. So you need to add it with the 'value' props inside 
+                                  the curly braces.
+                                
+                                  Only on IONIC component that needs to be done like this. For others, can just use the
+                                  standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                  and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                  E.g. as={<input type="number" />}
+                                */
+                                render={({ onChange, onBlur, value }) => (
+                                    <IonSelect disabled={true} value={value}>
+                                        <IonSelectOption value={true}>True</IonSelectOption>
+                                        <IonSelectOption value={false}>False</IonSelectOption>
+                                    </IonSelect>)}
+                                control={control}
+                                name="allDay"
+                                rules={validationOptions.allDay}
+                            />
+
+                            <small className="error-msg">
+                                {errors.allDay && errors.allDay.message}
+                            </small>
+                        </FormGroup>
+
+                        <div style={{ padding: '10px', display: 'flex' }}>
+                            <IonButton style={{ flex: '1' }} type="submit" color="success"
+                                disabled={formState.isValid === false}
+                            >Add</IonButton>
+                            <IonButton color="danger" style={{ flex: '1' }} onClick={() => resetForm("Reset")}>Reset</IonButton>
+                        </div>
+                    </Form>
                 </div>
-                <Form onSubmit={handleSubmit(submitForm)} className="form">
-                    <IonCard style={{background: "transparent"}}>
-                        <FormGroup className="formgroup">
-                            <IonItem className="formitem">
-                                <IonLabel position="floating">Name</IonLabel>
-                               
-                                <Controller
-                                /*
-                                  Need to add the 'value' parameter because otherwise, the value displayed will not be
-                                  resetted for the client side. So you need to add it with the 'value' props inside 
-                                  the curly braces.
-
-                                  Only on IONIC component that needs to be done like this. For others, can just use the
-                                  standard method in which u can just replace the 'render' parameter with the 'as' parameter
-                                  and in the 'as' parameter, you can just input the IONIC component inside the curly braces
-                                  E.g. as={<input type="number" />}
-                                */
-                                    render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
-                                    control={control}
-                                    name="title"
-                                    rules={validationOptions.title}
-                                />                                                     
-
-                            </IonItem>
-
-                            <small className="error-msg">
-                                {errors.title && errors.title.message}
-                            </small>
-                        </FormGroup>
-                        <FormGroup className="formgroup">
-                            <IonItem className="formitem">
-                                <IonLabel position="floating">Address</IonLabel>
-                               
-                                <Controller
-                                /*
-                                  Need to add the 'value' parameter because otherwise, the value displayed will not be
-                                  resetted for the client side. So you need to add it with the 'value' props inside 
-                                  the curly braces.
-
-                                  Only on IONIC component that needs to be done like this. For others, can just use the
-                                  standard method in which u can just replace the 'render' parameter with the 'as' parameter
-                                  and in the 'as' parameter, you can just input the IONIC component inside the curly braces
-                                  E.g. as={<input type="number" />}
-                                */
-                                    render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
-                                    control={control}
-                                    name="address"
-                                    rules={validationOptions.address}
-                                />
-                               
-                            </IonItem>
-                            <small className="error-msg">
-                                {errors.address && errors.address.message}
-                            </small>
-                        </FormGroup>
-                    </IonCard>
-
-                    <FormGroup className="formgroup">
-
-                        <div id="label-txt">End Date</div>
-
-                        <Controller
-                            /*
-                              Need to add the 'value' parameter because otherwise, the value displayed will not be
-                              resetted for the client side. So you need to add it with the 'value' props inside 
-                              the curly braces.
-
-                              Only on IONIC component that needs to be done like this. For others, can just use the
-                              standard method in which u can just replace the 'render' parameter with the 'as' parameter
-                              and in the 'as' parameter, you can just input the IONIC component inside the curly braces
-                              E.g. as={<input type="number" />}
-                            */
-                            render={({ onChange, onBlur, value }) => (<IonInput value={value} min={tmr} type="date" onIonChange={onChange} />)}
-                            control={control}
-                            name="end"
-                            rules={validationOptions.end}
-                        />
-
-                        <small className="error-msg">
-                            {errors.end && errors.end.message}
-                        </small>
-                    </FormGroup>
-
-                    <FormGroup className="formgroup">
-
-                        <div id="label-txt">Notification Date</div>
-
-                        <Controller
-                            /*
-                              Need to add the 'value' parameter because otherwise, the value displayed will not be
-                              resetted for the client side. So you need to add it with the 'value' props inside 
-                              the curly braces.
-                            
-                              Only on IONIC component that needs to be done like this. For others, can just use the
-                              standard method in which u can just replace the 'render' parameter with the 'as' parameter
-                              and in the 'as' parameter, you can just input the IONIC component inside the curly braces
-                              E.g. as={<input type="number" />}
-                            */
-                            render={({ onChange, onBlur, value }) => (<IonInput value={value} min={tmr} type="date" onIonChange={onChange} />)}
-                            control={control}
-                            name="noti"
-                            rules={validationOptions.noti}
-                        />
-
-                        <small className="error-msg">
-                            {errors.noti && errors.noti.message}
-                        </small>
-                    </FormGroup>
-                       
-                    <div style={{padding: '10px',display:'flex'}}>
-                        <IonButton style={{flex: '1'}} type="submit"  color="success"
-                        disabled={formState.isValid === false}
-                        >Add</IonButton>
-                        <IonButton color="danger" style={{flex: '1'}} onClick={() => resetForm("Reset")}>Reset</IonButton>
-                    </div>                 
-                </Form>
-            </div>
-
-            <IonButton color="dark" fill="solid" onClick={() => props.showModal(false)}>Close</IonButton>
-
+            </IonContent>
             <IonToast
                 isOpen={showToast}
                 onDidDismiss={() => setShowToast(false)}

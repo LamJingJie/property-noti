@@ -17,7 +17,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
-
+import { Subscription } from 'rxjs';
 //Icons
 import {
     archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp,
@@ -35,22 +35,42 @@ import ExploreContainer from '../components/ExploreContainer';
 //background designs
 import PageDesign from '../components/pageDesign';
 
+//Modal
+import EditEvent from './EditEvent';
 
 
 const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props => {
+    //Subscription
+    let eventSubscription: Subscription;
+
+
     const history = useHistory();
     const [event, setEvent] = useState<any>();
     const [showDelete, setShowDelete] = useState(false);
     const [showLoading, setShowLoading] = useState(false);
     const [msg, setMsg] = useState<string>();
     const [showToast, setShowToast] = useState(false);
+
+
+    //Edit Event Modal
+    const [showEditEvent, setShowEditEvent] = useState(false);
     
     const onPresent = ()=>{
+        console.log("Present");
         console.log(props.data);
         setEvent(props.data);
+
+        eventSubscription= propertyService.onOneProperty().subscribe((res: any)=>{
+            console.log(res);
+            setEvent(res);
+        });
     }
 
     const onDimiss = ()=>{
+        if(eventSubscription){
+            eventSubscription.unsubscribe();
+        } 
+        console.log("Dismiss");
         props.setShowModal(false);
     }
 
@@ -63,6 +83,10 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
     const deleteEventToast = ()=>{
         console.log("Deleted");
         setShowDelete(true);     
+    }
+
+    const editEventBtn = ()=>{
+        setShowEditEvent(true);     
     }
 
     //toast
@@ -80,12 +104,12 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
                 message={'Deleting...'}
                 onDidDismiss={() => setShowLoading(false)}
             />
-             <IonHeader class="ion-no-border">
-                <IonToolbar class="background">
+             <IonHeader class="header">
+                <IonToolbar>
                     <IonButtons slot="start"  onClick={() => onDimiss()}>
-                        <IonIcon size="large" md={arrowBackSharp}></IonIcon>
+                        <IonIcon size="large" style={{color:'black'}} md={arrowBackSharp}></IonIcon>
                     </IonButtons>
-                    <IonTitle>Event</IonTitle>
+                    <IonTitle class="title">Event</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent style={{height:'100%'}}>    
@@ -100,9 +124,9 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
 
                             <IonIcon id="time-icon" className='icon' color="secondary" md={timeOutline} />
                             <div id="time-txt" className="text end-of-item-event">
-                                <div className="time-content text">Start: {moment(event?.start.toString()).format('dddd MMMM D YYYY')}</div>
-                                <div className="time-content">End: {moment(event?.end.toString()).format('dddd MMMM D YYYY')}</div>
-                                <div className="time-content">Notify: {moment(event?.noti.toString()).format('dddd MMMM D YYYY')}</div>
+                                <div className="time-content text">Start: {moment(event?.start?.toString()).format('dddd MMMM D YYYY')}</div>
+                                <div className="time-content">End: {moment(event?.end?.toString()).format('dddd MMMM D YYYY')}</div>
+                                <div className="time-content">Notify: {moment(event?.noti?.toString()).format('dddd MMMM D YYYY')}</div>
                             {event?.allDay === true &&
                                 <div className="time-content" id="allday">All day</div>
                             }
@@ -120,7 +144,7 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
                         <IonIcon id="icon-footer" md={shareSocialOutline} />
                         <IonLabel id="label-footer">Share</IonLabel>            
                     </IonButton>
-                    <IonButton size="large" class="background strip-shadow footer-btn" >
+                    <IonButton onClick={() => editEventBtn()} size="large" class="background strip-shadow footer-btn" >
                         <IonIcon id="icon-footer" md={pencilOutline} />
                         <IonLabel id="label-footer">Edit</IonLabel>                       
                     </IonButton>
@@ -181,6 +205,9 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
                     }
                 ]}
             />
+
+
+            <EditEvent modal2={showEditEvent} setShowModal2={setShowEditEvent} data2={event!} />   
             
         </IonModal>
  

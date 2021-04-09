@@ -1,0 +1,5 @@
+#transparent-bckground{
+    background:transparent;
+    --background:transparent;
+    --box-shadow:none;
+}
