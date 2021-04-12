@@ -10,7 +10,7 @@ import { Storage, Drivers } from '@ionic/storage';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 
 export interface Property{
-    id: string,
+    id: number,
     title: string,
     address: string,
     allDay: boolean,
@@ -114,7 +114,7 @@ export function editProperty(item: Property): Promise<any> {
 
 
 //delete
-export function delProperty(id: string): Promise<any> {
+export function delProperty(id: number): Promise<any> {
     //console.log(id);
 
         return storage.get(ITEMS_KEY).then(async(items: Property[]) =>{

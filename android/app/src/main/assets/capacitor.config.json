@@ -7,6 +7,10 @@
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0
+    },
+    "LocalNotifications":{
+      "smallIcon": "ic_stat_house",
+      "iconColor":"#FF0000"
     }
   },
   "cordova": {}

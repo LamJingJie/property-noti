@@ -1,4 +1,4 @@
-import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react';
+import { IonApp, IonRouterOutlet, IonSplitPane, useIonViewWillEnter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Menu from './components/Menu';
@@ -26,10 +26,31 @@ import './theme/variables.css';
 //Pages
 import Home from './pages/Home';
 import Outbox from './pages/Outbox';
+import * as $ from "jquery"
 
-//Put firebase config here
+//local notification
+import { LocalNotification, LocalNotificationActionPerformed, LocalNotificationRequest, Plugins } from '@capacitor/core';
 
 const App: React.FC = () => {
+  
+  const { LocalNotifications } = Plugins;
+  //console.log("App");
+  LocalNotifications.requestPermission();
+
+  LocalNotifications.addListener('localNotificationActionPerformed', (notificationAction: LocalNotificationActionPerformed)=> {
+    alert(notificationAction.notification.title);
+  });
+
+  LocalNotifications.addListener('localNotificationReceived', (notification: LocalNotification) => {
+    console.log('Notification: ', notification);
+    alert(notification.title);
+  });
+
+ 
+
+ 
+  console.log("Done")
+
   return (
     <IonApp >
       <IonReactRouter >

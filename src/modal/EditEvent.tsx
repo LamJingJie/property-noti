@@ -35,6 +35,7 @@ import {
 
 //CRUD
 import { getProperty, Property, delProperty, propertyService, editProperty } from '../hooks/property';
+import { deleteNotification, createNotification } from '../hooks/notification';
 
 //Title & Menu function
 import ExploreContainer from '../components/ExploreContainer';
@@ -68,11 +69,6 @@ const EditEvent: React.FC<{modal2:boolean,setShowModal2: any, data2: any}> = (pr
     props.setShowModal2(false);
   }
 
-  //When noti input value changes
-  const test321 = () => {
-    console.log("Test321");
-  }
-
   //console.log(event);
   const initialValues = {
     title: props.data2?.title,
@@ -93,26 +89,30 @@ const EditEvent: React.FC<{modal2:boolean,setShowModal2: any, data2: any}> = (pr
   const submitForm = async (data: any)=>{
     let start: Date = moment(data.start).toDate();
 
+    let end_format: string = moment(data.end).format('dddd MMMM D YYYY');
     let end: Date = moment(data.end).toDate();
     let end_converted_number: number = end.setHours(0,0,0,0);
 
-    let noti: Date = moment(data.noti).toDate();
+    let noti_format: string = data.noti;
+    let noti: Date = moment(noti_format).toDate();
     let noti_converted_number: number = noti.setHours(0,0,0,0);
 
     data.id = props.data2?.id;
     data.start = start;
     data.end = end;
     data.noti = noti;
-    console.log(data);
+    //console.log(data);
     if((noti_converted_number > end_converted_number)){
-      console.log("Time cannot be the same");
+      //console.log("Time cannot be the same");
       showToast_function("'Notification Date' cannot be later than the 'End Date'!");
     }
     else{
-      console.log("Time is diff");
+      //console.log("Time is diff");
       setShowLoading(true);
-      editProperty(data).then((res=>{
-        console.log(res);
+      editProperty(data).then((async res=>{
+        await deleteNotification(data.id);
+        await createNotification(data.id, data.noti, data.title, data.address, noti_format, end_format);
+        //console.log(res);
         propertyService.sendProperty(res);//for the subscription in the 'home.tsx'. Returns entire list of updated array
         propertyService.sendOneProperty(data);//for subscription in 'event.tsx'. Returns only the updated object
         props.setShowModal2(false);
@@ -307,7 +307,7 @@ const EditEvent: React.FC<{modal2:boolean,setShowModal2: any, data2: any}> = (pr
                   and in the 'as' parameter, you can just input the IONIC component inside the curly braces
                   E.g. as={<input type="number" />}
                 */
-                render={({ onChange, onBlur, value }) => (<IonInput value={value} min={tmr} type="date" onInput={test321}  onIonChange={onChange} />)}
+                render={({ onChange, onBlur, value }) => (<IonInput value={value} min={tmr} type="date"  onIonChange={onChange} />)}
                 control={control}
                 name="noti"
                 rules={validationOptions.noti}

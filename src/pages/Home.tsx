@@ -122,7 +122,7 @@ const Home: React.FC = (props) => {
     }
 
     useIonViewDidEnter(()=>{
-        console.log("Did Enter");
+        //console.log("Did Enter");
     })
 
 
@@ -176,13 +176,13 @@ const Home: React.FC = (props) => {
           });*/
 
           //calendar.render();
-        console.log("Enter");
+        //console.log("Enter");
 
     })
 
     
    useIonViewDidLeave(()=>{
-       console.log("Did Leave");
+       //console.log("Did Leave");
    })
 
 
@@ -195,7 +195,7 @@ const Home: React.FC = (props) => {
         if(unsub_get){
             unsub_get();
         }*/
-        console.log("leave");
+        //console.log("leave");
     })
 
    

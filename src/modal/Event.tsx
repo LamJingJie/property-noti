@@ -28,6 +28,7 @@ import {
 
 //CRUD
 import { getProperty, Property, delProperty, propertyService } from '../hooks/property';
+import { deleteNotification, createNotification } from '../hooks/notification';
 
 //Title & Menu function
 import ExploreContainer from '../components/ExploreContainer';
@@ -56,8 +57,8 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
     const [showEditEvent, setShowEditEvent] = useState(false);
     
     const onPresent = ()=>{
-        console.log("Present");
-        console.log(props.data);
+        //console.log("Present");
+        //console.log(props.data);
         setEvent(props.data);
 
         eventSubscription= propertyService.onOneProperty().subscribe((res: any)=>{
@@ -70,7 +71,6 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
         if(eventSubscription){
             eventSubscription.unsubscribe();
         } 
-        console.log("Dismiss");
         props.setShowModal(false);
     }
 
@@ -81,7 +81,7 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
     }
 
     const deleteEventToast = ()=>{
-        console.log("Deleted");
+        //console.log("Deleted");
         setShowDelete(true);     
     }
 
@@ -174,7 +174,8 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
                         handler: () => {
                             console.log('delete clicked');
                             setShowLoading(true);
-                            delProperty(event?.id).then((res=>{
+                            delProperty(event?.id).then((async res=>{
+                                await deleteNotification(event?.id);
                                 console.log(res);
                                 propertyService.sendProperty(res);                               
                                 onDimiss();

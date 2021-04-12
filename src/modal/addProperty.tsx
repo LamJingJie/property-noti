@@ -28,15 +28,18 @@ import Moment from 'moment'
 //Title & Menu function
 import ExploreContainer from '../components/ExploreContainer';
 
-//firebase
+//hooks
 import { addProperty, getProperty, Property, propertyService } from '../hooks/property';
+import { deleteNotification, createNotification } from '../hooks/notification';
 
-  
+//local notification
+import { LocalNotificationRequest, Plugins } from '@capacitor/core';
 
   
 const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> =  props => {
 
-    
+    const { LocalNotifications } = Plugins;
+
     const today: Date = new Date();
     const today_convert: string = Moment(today.toString()).format('YYYY-MM-DD');
     const tmr: string = Moment((new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0,0,0,0)).toString()).format('YYYY-MM-DD');
@@ -75,24 +78,30 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
 
     //function
     const submitForm = async (data: any)=>{
-        let id = uuidv4();
-        
+        let random_number: number = parseInt(uuidv4(), 36);
+        let currentDate: number = new Date().getTime();
+        let id: number = random_number + currentDate;
+       
+        //console.log(id);
         let beginTime: Date = new Date(); 
+
+        
 
         //convert to allow the setting of time to 0 while keeping type as 'date'
         let beginTime_converted: Date = new Date(beginTime.getFullYear(), beginTime.getMonth(), beginTime.getDate(), 0, 0,0,0);
         let beginTime_converted_number:number = beginTime.setHours(0,0,0,0);
 
+        let end_format: string = Moment(data.end).format('dddd MMMM D YYYY');
         let end: Date = Moment(data.end).toDate();
         let end_converted_number: number = end.setHours(0,0,0,0);
         //console.log(end);
-
-        let noti: Date = Moment(data.noti).toDate();
+        let noti_format: string = data.noti;
+        let noti: Date = Moment(noti_format).toDate();
         //console.log(noti);
         let noti_converted_number: number = noti.setHours(0,0,0,0);
-          
+        //console.log(noti_format);
+
         data.id = id;
-        data.allDay = true;
         data.start = beginTime_converted;
         data.end = end;
         data.noti = noti;
@@ -104,15 +113,17 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
 
         //noti date chosen cannot be later than the end date
         if((noti_converted_number > end_converted_number)){
-            console.log("Time cannot be the same");
+            //console.log("Time cannot be the same");
             showToast_function("'Notification Date' cannot be later than the 'End Date'!");
         }else{
-            console.log("Different");
+            //console.log("Different");
+
             //Wait for the system to add into the firebase before proceeding
             setShowLoading(true);
 
             addProperty(data).then((async res=>{
                 //console.log(res);
+                await createNotification(data.id, data.noti, data.title, data.address, noti_format, end_format);
                 propertyService.sendProperty(res);
                 resetForm("reset");
                 await props.showModal(false);
@@ -122,17 +133,6 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
                 setShowLoading(false);
                 showToast_function(err);
             }));
-            
-            //addProperty
-            /*addProperty(data.propertyName, data.address, beginTime_converted, endTime, false).then((async res =>{
-                resetForm("reset");
-                await props.showModal(false);           
-                setShowLoading(false);
-                showToast_function("Successfully Added!");
-            })).catch((err=>{
-                setShowLoading(false);
-                showToast_function(err);
-            }))*/
             
         }
 
@@ -326,7 +326,7 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
 
                         <FormGroup className="formgroup">
 
-                            <div id="label-txt">Notification Date</div>
+                            <div id="label-txt">Notify Date</div>
 
                             <Controller
                                 /*
