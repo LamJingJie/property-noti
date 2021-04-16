@@ -1,4 +1,4 @@
-import './Outbox.css';
+import './About.css';
 
 import {
     IonContent, IonHeader, IonInput, IonPage, IonTitle, IonToolbar, IonButton, IonSelect,
@@ -30,7 +30,7 @@ import { Subscription } from 'rxjs';
 //local notification
 import { deleteNotification, createNotification } from '../hooks/notification';
 
-const Outbox: React.FC = () => {
+const About: React.FC = () => {
     let subscription: Subscription;
     const [messages, setMessages] = useState<any>([]);
 
@@ -47,25 +47,34 @@ const Outbox: React.FC = () => {
     }*/
 
     const createNoti=async ()=>{
-       /*createNotification(1).then((res=>{
-           console.log(res);
-           console.log("Created!");
-       })).catch((err=>{
-           console.log(err);
-       }))*/
-    }
+        createNotification(1, new Date(), "Title", "address", "dategroup", "End Date").then((res=>{
+            console.log(res);
+            console.log("Created!");
+        })).catch((err=>{
+            console.log(err);
+        }))
+     }
+ 
+     const deleteNoti=async()=>{
+        deleteNotification(1);
+     }
+ 
+     const updateNoti = async()=>{
+        await deleteNotification(1);
+        await createNotification(1, new Date(), "Title Changed", "address CHanged", "dategroup Changed", "End Date Changed").then((res=>{
+             console.log(res);
+             console.log("Created!");
+         })).catch((err=>{
+             console.log(err);
+         }))
+     }
 
-    const deleteNoti=async()=>{
-       deleteNotification(1);
-    }
-
-    const updateNoti = async()=>{
-       
-    }
-
+     const setState = () => {
+         window.history.replaceState('about','about',null);
+     }
     
     useIonViewWillEnter(()=>{
-
+        setState();
         /*subscription = messageService.onMessage().subscribe((message: any) => {
             if (message) {
                 // add message to local state if not empty
@@ -90,7 +99,7 @@ const Outbox: React.FC = () => {
    
     return(
         <IonPage>
-            <ExploreContainer name={"Expired"} />
+            <ExploreContainer name={"About"} />
 
             <IonContent class="content"  fullscreen>
                 <IonButton onClick={()=> createNoti()}>Create Noti</IonButton>
@@ -103,4 +112,4 @@ const Outbox: React.FC = () => {
     );
 }
 
-export default Outbox;
+export default About;

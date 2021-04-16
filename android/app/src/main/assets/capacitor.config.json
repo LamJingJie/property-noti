@@ -1,17 +1,17 @@
 {
-  "appId": "io.ionic.propertynoti",
-  "appName": "property-noti",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "build",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 0
-    },
-    "LocalNotifications":{
-      "smallIcon": "ic_stat_house",
-      "iconColor":"#FF0000"
-    }
-  },
-  "cordova": {}
+	"appId": "io.ionic.propertynoti",
+	"appName": "property-noti",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "build",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 0
+		},
+		"LocalNotifications": {
+			"smallIcon": "ic_stat_house",
+			"iconColor": "#FF0000"
+		}
+	},
+	"cordova": {}
 }

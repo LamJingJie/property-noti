@@ -59,7 +59,7 @@ const Home: React.FC = (props) => {
     const [popoverData, setPopoverData] = useState<Property[]>([]);
     let calendar: any;
     /*
-    This will be done in the future, if there's time
+    Method (2) to override back btn in android
     const override_bck_btn = () =>{
         console.log("Override back btn here");
         
@@ -118,15 +118,27 @@ const Home: React.FC = (props) => {
         //console.log(event);
         setSelectedEvent(event);
         setShowEvent(true);
+        window.history.replaceState('event', 'event', null);
         //history.push('/page/home/event');  
+    }
+
+    const addPropModal = () =>{
+        setAdd_Modal(true);
+        window.history.replaceState('addProperty', 'addProperty', null);
     }
 
     useIonViewDidEnter(()=>{
         //console.log("Did Enter");
-    })
+    });
+
+    //This will be its default state and it will be resetted to this everytime a modal is exited or this page is entered
+    const resetState = () =>{
+        window.history.replaceState('home','home',null);
+    }
 
 
     useIonViewWillEnter(()=>{       
+        resetState();
         /*propertySubscription = jingjie().subscribe((data: any)=>{
             
             console.log("Start");
@@ -198,6 +210,9 @@ const Home: React.FC = (props) => {
         //console.log("leave");
     })
 
+    const testing = () =>{
+        console.log(window.history.state);
+    }
    
 
     return(
@@ -207,6 +222,7 @@ const Home: React.FC = (props) => {
             <ExploreContainer name={"Home"} />
  
             <IonContent class="content"  fullscreen>
+                <IonButton onClick={()=> testing()}>Test</IonButton>
  
                 <div id="calendarContainer">
                     <Calendar
@@ -250,15 +266,15 @@ const Home: React.FC = (props) => {
                 </div>                  
 
                 <IonFab  slot="fixed" vertical="bottom" horizontal="end">
-                    <IonFabButton class="transparent-btn" size="small" onClick={() => setAdd_Modal(true)} >
+                    <IonFabButton class="transparent-btn" size="small" onClick={() => addPropModal() } >
                         <IonIcon md={addCircle}></IonIcon>
                     </IonFabButton>
                 </IonFab>
 
                 <PageDesign />
             </IonContent>
-            <AddProperty setPropData={setPropData} modal={addProp_Modal} showModal={setAdd_Modal}  />
-            <Event modal={showEvent} setShowModal={setShowEvent} data={selectedEvent!} />
+            <AddProperty setPropData={setPropData} modal={addProp_Modal} showModal={setAdd_Modal} resetState={resetState}  />
+            <Event modal={showEvent} setShowModal={setShowEvent} data={selectedEvent!} resetState={resetState}/>
 
         </IonPage>
        

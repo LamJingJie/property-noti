@@ -22,8 +22,8 @@ export interface Property{
 
 
 const ITEMS_KEY = 'my-property';
-const subject = new Subject();
-const subject2 = new Subject();
+const subject = new Subject();//For Home.tsx
+const subject2 = new Subject();//For Event.txs
 export const bsubject = new BehaviorSubject([]);
 
 /*export const messageService = {
@@ -91,7 +91,7 @@ export const propertyService = {
 
 //update
 export function editProperty(item: Property): Promise<any> {
-    console.log(item);
+    //console.log(item);
     return storage.get(ITEMS_KEY).then(async (items: Property[])=>{
         //If no items is inside storage
         if(!items || items.length === 0){

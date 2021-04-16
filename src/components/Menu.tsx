@@ -41,7 +41,7 @@ const appPages: AppPage[] = [
   },
   {
     title: 'About',
-    url: '/page/outbox',
+    url: '/page/about',
     iosIcon: calendarOutline,
     mdIcon: calendarSharp
   }

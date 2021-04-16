@@ -40,7 +40,7 @@ import PageDesign from '../components/pageDesign';
 import EditEvent from './EditEvent';
 
 
-const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props => {
+const Event: React.FC <{modal:boolean,setShowModal: any, data: object, resetState: any}> =  props => {
     //Subscription
     let eventSubscription: Subscription;
 
@@ -67,7 +67,8 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object}> =  props
         });
     }
 
-    const onDimiss = ()=>{
+    const onDimiss = async ()=>{
+        await props.resetState();
         if(eventSubscription){
             eventSubscription.unsubscribe();
         } 

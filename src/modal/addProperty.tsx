@@ -32,13 +32,10 @@ import ExploreContainer from '../components/ExploreContainer';
 import { addProperty, getProperty, Property, propertyService } from '../hooks/property';
 import { deleteNotification, createNotification } from '../hooks/notification';
 
-//local notification
-import { LocalNotificationRequest, Plugins } from '@capacitor/core';
+import { App } from '@capacitor/app';
 
-  
-const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> =  props => {
+const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any, resetState: any}> =  props => {
 
-    const { LocalNotifications } = Plugins;
 
     const today: Date = new Date();
     const today_convert: string = Moment(today.toString()).format('YYYY-MM-DD');
@@ -156,7 +153,17 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
         reset(initialValues);
     }
 
-    const onDismiss = () =>{
+    const onPresent = () =>{
+        //console.log(window.history.state);
+        /*getProperty().then((async res=>{
+            if(res){
+                props.setPropData(res);
+            }
+        }));*/
+    }
+
+    const onDismiss =async () =>{
+        await props.resetState();
         props.showModal(false);
         /*getProperty().then((async res=>{
             if(res){
@@ -196,7 +203,7 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any}> = 
     };
 
     return (
-        <IonModal animated={true} swipeToClose={true} onDidDismiss={() => onDismiss()} isOpen={props.modal} cssClass="content">
+        <IonModal animated={true} swipeToClose={true} onWillPresent={() => onPresent()} onDidDismiss={() => onDismiss()} isOpen={props.modal} cssClass="content">
             <IonLoading
                 cssClass='my-custom-class'
                 isOpen={showLoading}

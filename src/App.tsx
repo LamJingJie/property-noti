@@ -1,4 +1,4 @@
-import { IonApp, IonRouterOutlet, IonSplitPane, useIonViewWillEnter } from '@ionic/react';
+import { IonApp, IonRouterOutlet, IonSplitPane, useIonRouter, useIonViewWillEnter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Menu from './components/Menu';
@@ -25,25 +25,39 @@ import './theme/variables.css';
 
 //Pages
 import Home from './pages/Home';
-import Outbox from './pages/Outbox';
+import About from './pages/About';
 import * as $ from "jquery"
 
 //local notification
-import { LocalNotification, LocalNotificationActionPerformed, LocalNotificationRequest, Plugins } from '@capacitor/core';
+import { Schedule, LocalNotifications, LocalNotificationSchema, ActionPerformed} from '@capacitor/local-notifications';
 
-const App: React.FC = () => {
-  
-  const { LocalNotifications } = Plugins;
-  //console.log("App");
-  LocalNotifications.requestPermission();
 
-  LocalNotifications.addListener('localNotificationActionPerformed', (notificationAction: LocalNotificationActionPerformed)=> {
-    alert(notificationAction.notification.title);
+import { AppPlugin, App } from '@capacitor/app'
+
+const Apps: React.FC = () => {
+  //There was a bug that causes u to be unable to exit a modal using your android back btn.
+  //So, the idea of this is to override the default back btn on android and manually add the code
+  //that checks the current state and act accordingly depending on the current state.
+  let bckbtn = App.addListener('backButton', ()=>{
+    if(window.history.state === 'home' || window.history.state === 'about'){  
+      App.exitApp();
+    }else{  
+      window.history.back();
+    }
   });
 
-  LocalNotifications.addListener('localNotificationReceived', (notification: LocalNotification) => {
+  
+  //console.log("App");
+  LocalNotifications.requestPermissions();
+
+  LocalNotifications.addListener('localNotificationActionPerformed', (notificationAction: ActionPerformed)=> {
+    console.log("Notification Clicked: " + notificationAction.notification);
+    alert("Notification Clicked");
+  });
+
+  LocalNotifications.addListener('localNotificationReceived', (notification: LocalNotificationSchema) => {
     console.log('Notification: ', notification);
-    alert(notification.title);
+    alert("Notification Received");
   });
 
  
@@ -63,7 +77,7 @@ const App: React.FC = () => {
 
             <Route path="/page/home" component={Home} exact={true} /> 
 
-            <Route path="/page/outbox" component={Outbox} exact={true} /> 
+            <Route path="/page/about" component={About} exact={true} /> 
 
             
           </IonRouterOutlet>
@@ -73,4 +87,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default Apps;

@@ -1,13 +1,14 @@
+import '@capacitor/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Apps from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Apps />
   </React.StrictMode>,
   document.getElementById('root')
 );
