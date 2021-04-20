@@ -54,6 +54,15 @@ const About: React.FC = () => {
             console.log(err);
         }))
      }
+
+     const createNoti2=async ()=>{
+        createNotification(2, new Date(), "Title2", "address2", "dategroup2", "End Date2").then((res=>{
+            console.log(res);
+            console.log("Created!");
+        })).catch((err=>{
+            console.log(err);
+        }))
+     }
  
      const deleteNoti=async()=>{
         deleteNotification(1);
@@ -103,6 +112,7 @@ const About: React.FC = () => {
 
             <IonContent class="content"  fullscreen>
                 <IonButton onClick={()=> createNoti()}>Create Noti</IonButton>
+                <IonButton onClick={()=> createNoti2()}>Create Noti2</IonButton>
                 <IonButton onClick={()=> deleteNoti()}>Delete Noti</IonButton>
                 <IonButton onClick={()=> updateNoti()}>Update Noti</IonButton>
 

@@ -1551,6 +1551,13 @@
     "gud" "^1.0.0"
     "warning" "^4.0.3"
 
+"@ionic-native/background-mode@^5.32.1":
+  "integrity" "sha512-0dRW7JHIJDnmSQ2FFzNrophMkSPK4npbu6+TJNSJk3JkUY5e7qRc//lToraU/RK+eC2cclAnuZp1qQ9UWEJhRA=="
+  "resolved" "https://registry.npmjs.org/@ionic-native/background-mode/-/background-mode-5.32.1.tgz"
+  "version" "5.32.1"
+  dependencies:
+    "@types/cordova" "latest"
+
 "@ionic-native/calendar@^5.31.1":
   "integrity" "sha512-RqOSxx0qZOJm8dRFS0ZZ0JlWI2aYpsFrYhIe/oO9VQhZBGw9m8/BaGqjwPASp9lJcPAueCEqSVxpSUUE3oeQhg=="
   "resolved" "https://registry.npmjs.org/@ionic-native/calendar/-/calendar-5.31.1.tgz"
@@ -1558,10 +1565,31 @@
   dependencies:
     "@types/cordova" "latest"
 
+"@ionic-native/core@^5.1.0":
+  "integrity" "sha512-SdOQ1hxR05wI7ep9UebZ2Uqo9EMrBhS4pgadmBNHChiNnJ8VkbMVtfsabojwTQ8ZAgJ8UR8zUWVTCgM4AB9HVw=="
+  "resolved" "https://registry.npmjs.org/@ionic-native/core/-/core-5.32.1.tgz"
+  "version" "5.32.1"
+  dependencies:
+    "@types/cordova" "latest"
+
+"@ionic-native/geolocation@^5.32.1":
+  "integrity" "sha512-6X12IeL/ykc0lNeSxHCavEEtpviT54oFApksMu6tJjlVY086lRm4LnC5A2xZ001QkePa7Cdz10/m59Ne5E3qWg=="
+  "resolved" "https://registry.npmjs.org/@ionic-native/geolocation/-/geolocation-5.32.1.tgz"
+  "version" "5.32.1"
+  dependencies:
+    "@types/cordova" "latest"
+
 "@ionic-native/local-notifications@^5.31.1":
   "integrity" "sha512-OOd4EUnnfpDbvuJIwh3UzJ/6fFMTmf8f43mAfU0URkUS/LVJpl9aJzDCOLIB+0RXo+ZeRqW17q44qgUArgz1VQ=="
   "resolved" "https://registry.npmjs.org/@ionic-native/local-notifications/-/local-notifications-5.31.1.tgz"
   "version" "5.31.1"
+  dependencies:
+    "@types/cordova" "latest"
+
+"@ionic-native/native-geocoder@^5.32.1":
+  "integrity" "sha512-rO/Tj1Ly0hr4sSco+5CHb8VRstuIWEePub6Yqj5MLBjrDDoqyzo5Q6NbVdZBdjd1te5fOYqPjedFWoBRa22BHw=="
+  "resolved" "https://registry.npmjs.org/@ionic-native/native-geocoder/-/native-geocoder-5.32.1.tgz"
+  "version" "5.32.1"
   dependencies:
     "@types/cordova" "latest"
 
@@ -1981,6 +2009,11 @@
   "resolved" "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz"
   "version" "1.1.0"
 
+"@react-leaflet/core@^1.0.2":
+  "integrity" "sha512-QbleYZTMcgujAEyWGki8Lx6cXQqWkNtQlqf5c7NImlIp8bKW66bFpez/6EVatW7+p9WKBOEOVci/9W7WW70EZg=="
+  "resolved" "https://registry.npmjs.org/@react-leaflet/core/-/core-1.0.2.tgz"
+  "version" "1.0.2"
+
 "@restart/hooks@^0.3.25":
   "integrity" "sha512-7Hwk2ZMYm+JLWcb7R9qIXk1OoUg1Z+saKWqZXlrvFwT3w6UArVNWgxYOzf+PJoK9zZejp8okPAKTctthhXLt5g=="
   "resolved" "https://registry.npmjs.org/@restart/hooks/-/hooks-0.3.26.tgz"
@@ -2256,6 +2289,11 @@
   "resolved" "https://registry.npmjs.org/@types/estree/-/estree-0.0.39.tgz"
   "version" "0.0.39"
 
+"@types/geojson@*":
+  "integrity" "sha512-wE2v81i4C4Ol09RtsWFAqg3BUitWbHSpSlIo+bNdsCJijO9sjme+zm+73ZMCa/qMC8UEERxzGbvmr1cffo2SiQ=="
+  "resolved" "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.7.tgz"
+  "version" "7946.0.7"
+
 "@types/glob@^7.1.1":
   "integrity" "sha512-SEYeGAIQIQX8NN6LDKprLjbrd5dARM5EXsd8GI/A5l0apYI1fGMWgPHSe4ZKL4eozlAyI+doUE9XbYS4xCkQ1w=="
   "resolved" "https://registry.npmjs.org/@types/glob/-/glob-7.1.3.tgz"
@@ -2324,6 +2362,13 @@
   "integrity" "sha1-7ihweulOEdK4J7y+UnC86n8+ce4="
   "resolved" "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz"
   "version" "0.0.29"
+
+"@types/leaflet@^1.7.0":
+  "integrity" "sha512-ltv5jR+VjKSMtoDkxH61Rsbo0zLU7iqyOXpVPkAX4F+79fg2eymC7t0msWsfNaEZO1FGTIQATCCCQe+ijWoicg=="
+  "resolved" "https://registry.npmjs.org/@types/leaflet/-/leaflet-1.7.0.tgz"
+  "version" "1.7.0"
+  dependencies:
+    "@types/geojson" "*"
 
 "@types/lodash@^4.14.165":
   "integrity" "sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q=="
@@ -4313,6 +4358,11 @@
   "resolved" "https://registry.npmjs.org/copy-descriptor/-/copy-descriptor-0.1.1.tgz"
   "version" "0.1.1"
 
+"cordova-plugin-background-mode@^0.7.3":
+  "integrity" "sha512-LsU1v7EgTUROaks+tcQ8TnMzVUcU/TwjDVwj2O/4e4aI2q2ldLGsiZorqKqfqvwh2HoIssmY73OwJk91hQi62w=="
+  "resolved" "https://registry.npmjs.org/cordova-plugin-background-mode/-/cordova-plugin-background-mode-0.7.3.tgz"
+  "version" "0.7.3"
+
 "cordova-plugin-badge@^0.8.8":
   "integrity" "sha512-RhIBtd5xhD/iLnxjt35jvOae28oNW/wtMZBOmQR3Rf0y4wirvA1bpAZEhBoFqL+rZGhsd6ddOdQXdex1T0DRyQ=="
   "resolved" "https://registry.npmjs.org/cordova-plugin-badge/-/cordova-plugin-badge-0.8.8.tgz"
@@ -4328,10 +4378,20 @@
   "resolved" "https://registry.npmjs.org/cordova-plugin-device/-/cordova-plugin-device-2.0.3.tgz"
   "version" "2.0.3"
 
+"cordova-plugin-geolocation@^4.1.0":
+  "integrity" "sha512-y5io/P10xGMxSn2KEqfv/fExK47eA1pmSonJdmDqDsaSADV9JpgdPx0mUSA08+5pzma/OS9R0LoODeDPx7Jvjg=="
+  "resolved" "https://registry.npmjs.org/cordova-plugin-geolocation/-/cordova-plugin-geolocation-4.1.0.tgz"
+  "version" "4.1.0"
+
 "cordova-plugin-local-notification@^0.9.0-beta.2":
   "integrity" "sha512-63n77K1pt8dnbWnNR8QWETi9Glezi1bvNHvHWmGNIOv0xCb0phZnm+Ku49BQ+omwe8Z5voMvrA4I03SYPpv38w=="
   "resolved" "https://registry.npmjs.org/cordova-plugin-local-notification/-/cordova-plugin-local-notification-0.9.0-beta.2.tgz"
   "version" "0.9.0-beta.2"
+
+"cordova-plugin-nativegeocoder@^3.4.1":
+  "integrity" "sha512-2VDRWFJIRk7mYGxPctadvtdeyYpgX/PZl3xAc8zglLK83YQnAp5p2sNoiYokkCMEXK+vSeuff3E7b3fkAC1TsQ=="
+  "resolved" "https://registry.npmjs.org/cordova-plugin-nativegeocoder/-/cordova-plugin-nativegeocoder-3.4.1.tgz"
+  "version" "3.4.1"
 
 "core-js-compat@^3.6.2", "core-js-compat@^3.8.1", "core-js-compat@^3.9.0":
   "integrity" "sha512-jXAirMQxrkbiiLsCx9bQPJFA6llDadKMpYrBJQJ3/c4/vsPP/fAf29h24tviRlvwUL6AmY5CHLu2GvjuYviQqA=="
@@ -8015,6 +8075,11 @@
     "lodash" "^4.17.5"
     "webpack-sources" "^1.1.0"
 
+"leaflet@^1.7.1":
+  "integrity" "sha512-/xwPEBidtg69Q3HlqPdU3DnrXQOvQU/CCHA1tcDQVzOwm91YMYaILjNp7L4Eaw5Z4sOYdbBz6koWyibppd8Zqw=="
+  "resolved" "https://registry.npmjs.org/leaflet/-/leaflet-1.7.1.tgz"
+  "version" "1.7.1"
+
 "leven@^3.1.0":
   "integrity" "sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A=="
   "resolved" "https://registry.npmjs.org/leven/-/leven-3.1.0.tgz"
@@ -10472,6 +10537,13 @@
   "integrity" "sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA=="
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.1.tgz"
   "version" "17.0.1"
+
+"react-leaflet@^3.1.0":
+  "integrity" "sha512-kdZS8NYbYFPmkQr7zSDR2gkKGFeWvkxqoqcmZEckzHL4d5c85dJ2gbbqhaPDpmWWgaRw9O29uA/77qpKmK4mTQ=="
+  "resolved" "https://registry.npmjs.org/react-leaflet/-/react-leaflet-3.1.0.tgz"
+  "version" "3.1.0"
+  dependencies:
+    "@react-leaflet/core" "^1.0.2"
 
 "react-lifecycles-compat@^3.0.4":
   "integrity" "sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA=="

@@ -29,13 +29,13 @@ import Moment from 'moment'
 import ExploreContainer from '../components/ExploreContainer';
 
 //hooks
-import { addProperty, getProperty, Property, propertyService } from '../hooks/property';
+import { addProperty, getProperty, Property, propertyService, get_location_from_address } from '../hooks/property';
 import { deleteNotification, createNotification } from '../hooks/notification';
 
 import { App } from '@capacitor/app';
+import { NativeGeocoderResult } from '@ionic-native/native-geocoder';
 
 const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any, resetState: any}> =  props => {
-
 
     const today: Date = new Date();
     const today_convert: string = Moment(today.toString()).format('YYYY-MM-DD');
@@ -78,11 +78,8 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any, res
         let random_number: number = parseInt(uuidv4(), 36);
         let currentDate: number = new Date().getTime();
         let id: number = random_number + currentDate;
-       
-        //console.log(id);
-        let beginTime: Date = new Date(); 
 
-        
+        let beginTime: Date = new Date(); 
 
         //convert to allow the setting of time to 0 while keeping type as 'date'
         let beginTime_converted: Date = new Date(beginTime.getFullYear(), beginTime.getMonth(), beginTime.getDate(), 0, 0,0,0);
@@ -103,8 +100,6 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any, res
         data.end = end;
         data.noti = noti;
 
-        //console.log(data);
-
         //console.log(beginTime_converted_number);
         //console.log(endTime_converted_number);
 
@@ -113,33 +108,41 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any, res
             //console.log("Time cannot be the same");
             showToast_function("'Notification Date' cannot be later than the 'End Date'!");
         }else{
-            //console.log("Different");
-
-            //Wait for the system to add into the firebase before proceeding
             setShowLoading(true);
 
-            addProperty(data).then((async res=>{
-                //console.log(res);
-                await createNotification(data.id, data.noti, data.title, data.address, noti_format, end_format);
-                propertyService.sendProperty(res);
-                resetForm("reset");
-                await props.showModal(false);
-                setShowLoading(false);
-                showToast_function("Successfully Added!");
-            })).catch((err=>{
+            //Only works for android or IOS
+            //convert address to latitude and longitude
+            get_location_from_address(data.address).then((val => {
+                if(val === null || val === undefined){
+                    data.longitude = 0;
+                    data.latitude = 0;
+                }else{
+                    let result: NativeGeocoderResult[] = val;
+                    data.longitude = result[0].longitude;
+                    data.latitude = result[0].latitude;
+                }
+                
+                //alert(data.longitude);
+                //alert(data.latitude);
+                addProperty(data).then((async res=>{
+                    //console.log(res);
+                    await createNotification(data.id, data.noti, data.title, data.address, noti_format, end_format);
+                    propertyService.sendProperty(res);
+                    resetForm("reset");
+                    await props.showModal(false);
+                    setShowLoading(false);
+                    showToast_function("Successfully Added!");
+                })).catch((err=>{
+                    setShowLoading(false);
+                    showToast_function(err);
+                }));
+
+            })).catch(err=>{
                 setShowLoading(false);
                 showToast_function(err);
-            }));
+            })
             
         }
-
-        //console.log(data.propertyName);
-        //console.log(data.address);
-        //console.log(data.endTime);
-        //console.log(endTime);
-        //console.log(beginTime);
-        //console.log(beginTime_converted);
-
         
     }
 

@@ -1,3 +1,5 @@
+@import 'leaflet/dist/leaflet.css';
+
 .icon{
     width:100%;
     font-size: 22px;
@@ -32,9 +34,9 @@
     /*grid-template-columns: repeat(1, 1fr 7fr);
     grid-template-rows: repeat(3, 1fr);*/
     grid-template-columns: 1fr minmax(80%, 85%);
-    grid-template-rows: minmax(30px, auto) minmax(30px, auto) minmax(30px, auto) minmax(100px, auto);
+    grid-template-rows: minmax(30px, auto) minmax(30px, auto) minmax(30px, auto) minmax(200px, auto);
     gap: 15px;
-    row-gap: 25px;
+    row-gap: 35px;
     
 }
 
@@ -79,6 +81,8 @@
 #google-map{
     grid-column: 1 / span 2;
     grid-row: 4;
+    height:100%;
+    width:100%;
 }
 
 
@@ -104,3 +108,10 @@
     padding: 2px;
 }
 
+
+
+/*Map*/
+.map-container{
+    height: 100%;
+    width: 100%;
+}

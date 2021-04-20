@@ -210,11 +210,6 @@ const Home: React.FC = (props) => {
         //console.log("leave");
     })
 
-    const testing = () =>{
-        console.log(window.history.state);
-    }
-   
-
     return(
 
         <IonPage>
@@ -222,7 +217,6 @@ const Home: React.FC = (props) => {
             <ExploreContainer name={"Home"} />
  
             <IonContent class="content"  fullscreen>
-                <IonButton onClick={()=> testing()}>Test</IonButton>
  
                 <div id="calendarContainer">
                     <Calendar

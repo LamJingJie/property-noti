@@ -34,7 +34,7 @@ import {
 } from 'ionicons/icons';
 
 //CRUD
-import { getProperty, Property, delProperty, propertyService, editProperty } from '../hooks/property';
+import { getProperty, Property, delProperty, propertyService, editProperty, get_location_from_address } from '../hooks/property';
 import { deleteNotification, createNotification } from '../hooks/notification';
 
 //Title & Menu function
@@ -42,6 +42,7 @@ import ExploreContainer from '../components/ExploreContainer';
 
 //background designs
 import PageDesign from '../components/pageDesign';
+import { NativeGeocoderResult } from '@ionic-native/native-geocoder';
 
 
 const EditEvent: React.FC<{modal2:boolean,setShowModal2: any, data2: any}> = (props) => {
@@ -73,9 +74,9 @@ const EditEvent: React.FC<{modal2:boolean,setShowModal2: any, data2: any}> = (pr
   const initialValues = {
     title: props.data2?.title,
     address: props.data2?.address,
-    start: moment(props.data2?.start.toString()).format('YYYY-MM-DD'),
-    end: moment(props.data2?.end.toString()).format('YYYY-MM-DD'),
-    noti: moment(props.data2?.noti.toString()).format('YYYY-MM-DD'),
+    start: moment(props.data2?.start?.toString()).format('YYYY-MM-DD'),
+    end: moment(props.data2?.end?.toString()).format('YYYY-MM-DD'),
+    noti: moment(props.data2?.noti?.toString()).format('YYYY-MM-DD'),
     allDay: props.data2?.allDay,
   }
 
@@ -109,19 +110,38 @@ const EditEvent: React.FC<{modal2:boolean,setShowModal2: any, data2: any}> = (pr
     else{
       //console.log("Time is diff");
       setShowLoading(true);
-      editProperty(data).then((async res=>{
-        await deleteNotification(data.id);
-        await createNotification(data.id, data.noti, data.title, data.address, noti_format, end_format);
-        //console.log(res);
-        propertyService.sendProperty(res);//for the subscription in the 'home.tsx'. Returns entire list of updated array
-        propertyService.sendOneProperty(data);//for subscription in 'event.tsx'. Returns only the updated object
-        props.setShowModal2(false);
-        setShowLoading(false);
-        showToast_function("Successfully Added!");
+
+      //Only works for android or IOS
+      get_location_from_address(data.address).then((val => {
+        if (val === null || val == undefined) {
+          data.longitude = 0;
+          data.latitude = 0;
+        } else {
+          let result: NativeGeocoderResult[] = val;
+          data.longitude = result[0].longitude;
+          data.latitude = result[0].latitude;
+        }
+        //alert("Longitude: " + data.longitude);
+        //alert("Latitude: " + data.latitude);
+
+        editProperty(data).then((async res=>{
+          await deleteNotification(data.id);
+          await createNotification(data.id, data.noti, data.title, data.address, noti_format, end_format);
+          //console.log(res);
+          propertyService.sendOneProperty(data);//for subscription in 'event.tsx'. Returns only the updated object
+          propertyService.sendProperty(res);//for the subscription in the 'home.tsx'. Returns entire list of updated array       
+          props.setShowModal2(false);
+          setShowLoading(false);
+          showToast_function("Successfully Added!");
+        })).catch((err=>{
+          setShowLoading(false);
+          showToast_function(err);
+        }));
+
       })).catch((err=>{
         setShowLoading(false);
         showToast_function(err);
-      }))
+      }));
     }
   }
 

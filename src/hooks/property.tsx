@@ -8,6 +8,11 @@ import { isPlatform } from '@ionic/react';
 import { Storage, Drivers } from '@ionic/storage';
 
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder';
+let options: NativeGeocoderOptions = {
+    useLocale: true,
+    maxResults:5,
+};
 
 export interface Property{
     id: number,
@@ -17,6 +22,8 @@ export interface Property{
     start: Date,
     end: Date,
     noti: Date,
+    longitude: number,
+    latitude: number
 }
 
 
@@ -135,4 +142,16 @@ export function delProperty(id: number): Promise<any> {
 
         })
    
+}
+
+
+export function get_location_from_address(address: string): Promise<any>{
+    
+    return NativeGeocoder.forwardGeocode(address, options).then((result: NativeGeocoderResult[]) => {
+        //alert(parseFloat(result[0].latitude));
+        //alert(parseFloat(result[0].longitude));
+        return result;
+    }).catch((err=>{
+        return null;
+    }));
 }

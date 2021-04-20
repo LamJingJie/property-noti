@@ -11,23 +11,26 @@ IonTabBar,
 IonRippleEffect, IonLoading,
 IonToast,} from '@ionic/react';
 import { useParams } from 'react-router';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
 import { Subscription } from 'rxjs';
+import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder';
+
+
 //Icons
 import {
     archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp,
     trashOutline, trashSharp, warningOutline, warningSharp, homeSharp, homeOutline, calendarSharp, calendarOutline,
     addCircleOutline, addCircle, addCircleSharp, addSharp, arrowBackSharp, backspace, text, shareSocialOutline, pencilOutline, trashBinOutline,
-    locationOutline, timeOutline
+    locationOutline, timeOutline, refreshOutline
   } from 'ionicons/icons';
 
 //CRUD
-import { getProperty, Property, delProperty, propertyService } from '../hooks/property';
+import { getProperty, Property, delProperty, propertyService, get_location_from_address } from '../hooks/property';
 import { deleteNotification, createNotification } from '../hooks/notification';
 
 //Title & Menu function
@@ -39,11 +42,22 @@ import PageDesign from '../components/pageDesign';
 //Modal
 import EditEvent from './EditEvent';
 
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+/*
+TO-DO:
 
-const Event: React.FC <{modal:boolean,setShowModal: any, data: object, resetState: any}> =  props => {
+1. Calculate the latlong on Event.tsx load rather than saving it in 
+*/
+
+const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: any}> =  props => {
+    //map
+    const animateRef = useRef(false)
+    let state = {
+        keyMAP: Math.random(),
+     };
+
     //Subscription
-    let eventSubscription: Subscription;
-
+    let eventSub: Subscription;
 
     const history = useHistory();
     const [event, setEvent] = useState<any>();
@@ -51,34 +65,61 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object, resetStat
     const [showLoading, setShowLoading] = useState(false);
     const [msg, setMsg] = useState<string>();
     const [showToast, setShowToast] = useState(false);
-
+    const [isLoaded, setIsLoaded] = useState(false);//ensure modal is completely initialized before loading map
+    const [latlongErr, setlatlongErr] = useState(false);//check if latlong is 0 (lat long error), false if not, true if so.
 
     //Edit Event Modal
     const [showEditEvent, setShowEditEvent] = useState(false);
     
-    const onPresent = ()=>{
-        //console.log("Present");
-        //console.log(props.data);
-        setEvent(props.data);
-
-        eventSubscription= propertyService.onOneProperty().subscribe((res: any)=>{
-            console.log(res);
+    const onPresent = ()=>{    
+        
+        setEvent(props.data);  
+        if(props.data?.latitude === 0 && props.data?.longitude === 0){
+            setlatlongErr(true);
+        }    
+        eventSub= propertyService.onOneProperty().subscribe((res: any)=>{
+            setlatlongErr(false);
+            //console.log(res);
             setEvent(res);
-        });
+            if(res.latitude === 0 && res.longitude === 0){
+                setlatlongErr(true);
+            }
+        });   
+        //console.log("Latitude: " + latitude + " Longitude: " + longitude); 
     }
+
+    const refreshmap = ()=>{
+        get_location_from_address(event?.address).then((val => {
+            if (val === null || val == undefined) {
+                showToast_function("No Internet or Invalid Address!");
+                return;
+            }
+            let result: NativeGeocoderResult[] = val;
+
+            event.latitude = result[0].latitude;
+            event.longitude = result[0].longitude;
+           
+            propertyService.sendOneProperty(event);
+            
+        })).catch((err=>{
+            showToast_function(err);
+        }))
+    }
+
+    const onDidPresent=()=>{
+        setIsLoaded(true);
+    }
+
+
 
     const onDimiss = async ()=>{
+        setIsLoaded(false);
+        setlatlongErr(false);
         await props.resetState();
-        if(eventSubscription){
-            eventSubscription.unsubscribe();
+        if(eventSub){
+            eventSub.unsubscribe();
         } 
         props.setShowModal(false);
-    }
-
-    const onclick = ()=>{
-        console.log(event);
-        console.log(moment(event?.start.toString()).format('dddd MMMM D YYYY'));
-        console.log(event?.id);
     }
 
     const deleteEventToast = ()=>{
@@ -98,7 +139,8 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object, resetStat
 
 
     return(
-        <IonModal animated={true} swipeToClose={true} onWillPresent={() => onPresent()} onDidDismiss={() => onDimiss()} isOpen={props.modal} cssClass="content">
+        <IonModal animated={true} swipeToClose={true}  onWillPresent={() => onPresent()} onDidPresent={()=> onDidPresent()} onWillDismiss={() => onDimiss()} isOpen={props.modal} cssClass="content">
+            
              <IonLoading
                 cssClass='my-custom-class'
                 isOpen={showLoading}
@@ -115,36 +157,64 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: object, resetStat
             </IonHeader>
             <IonContent style={{height:'100%'}}>    
             
-                <div className="content_event" >                
-                        <div className="grid-container">
-                            <IonIcon id="title-icon" className='icon' color="secondary" md={text} />
-                            <IonText id="title-txt" className='text end-of-item-event' >{event?.title}</IonText>
-                            
-                            <IonIcon id="address-icon" className='icon' color="secondary" md={locationOutline} />
-                            <IonText id="address-txt" className='text end-of-item-event' >{event?.address}</IonText>
+                <div className="content_event" >
+                    <div className="grid-container">
+                        <IonIcon id="title-icon" className='icon' color="secondary" md={text} />
+                        <IonText id="title-txt" className='text end-of-item-event' >{event?.title}</IonText>
 
-                            <IonIcon id="time-icon" className='icon' color="secondary" md={timeOutline} />
-                            <div id="time-txt" className="text end-of-item-event">
-                                <div className="time-content text">Start: {moment(event?.start?.toString()).format('dddd MMMM D YYYY')}</div>
-                                <div className="time-content">End: {moment(event?.end?.toString()).format('dddd MMMM D YYYY')}</div>
-                                <div className="time-content">Notify: {moment(event?.noti?.toString()).format('dddd MMMM D YYYY')}</div>
+                        <IonIcon id="address-icon" className='icon' color="secondary" md={locationOutline} />
+                        <IonText id="address-txt" className='text end-of-item-event' >{event?.address}</IonText>
+
+                        <IonIcon id="time-icon" className='icon' color="secondary" md={timeOutline} />
+                        <div id="time-txt" className="text end-of-item-event">
+                            <div className="time-content text">Start: {moment(event?.start?.toString()).format('dddd MMMM D YYYY')}</div>
+                            <div className="time-content">End: {moment(event?.end?.toString()).format('dddd MMMM D YYYY')}</div>
+                            <div className="time-content">Notify: {moment(event?.noti?.toString()).format('dddd MMMM D YYYY')}</div>
                             {event?.allDay === true &&
                                 <div className="time-content" id="allday">All day</div>
                             }
-                            </div>
+                        </div>
 
-                            <div id="google-map">
-                                Google Map will be placed here!
-                            </div>                           
-                        </div>               
+                        {isLoaded === true && latlongErr === false &&
+
+                            //Wait for modal to finish loading before initializing the map. 
+                            //To prevent the map from initializing beforehand that causes the center of the map to be
+                            //on the top-left corner of the app on mobile devices.
+                            <MapContainer key={state.keyMAP} id="google-map" className="map-container" center={[event?.latitude, event?.longitude]} zoom={15} scrollWheelZoom={false} zoomAnimation={true}>
+                                <TileLayer
+                                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                />
+                                <Marker position={[event?.latitude, event?.longitude]}>
+                                    <Popup>
+                                        {event?.address}
+                                    </Popup>
+                                </Marker>
+
+                            </MapContainer>
+                        }
+
+                        {isLoaded === true && latlongErr === true &&
+                            <div id="google-map" className="error">
+                                <IonCard className="background strip-shadow">
+                                    <IonCardHeader>
+                                        <IonCardTitle>What Happen to Map?</IonCardTitle>
+                                    </IonCardHeader>
+                                    <IonCardContent>When you're <b>Editing</b> or <b>Adding</b> events, ensure that there's <b>Internet and a Valid Address</b>. Otherwise, wouldn't be able to get latitude and longitude from address. Map won't load correctly!</IonCardContent>
+                                    <IonButton class="background strip-shadow" onClick={() => refreshmap()}>
+                                        <IonIcon md={refreshOutline} />
+                                        <IonLabel id="label-footer">map</IonLabel>
+                                    </IonButton>
+                                </IonCard>
+                            </div>
+                        }
+
+                    </div>
                 </div>
             </IonContent>
             <IonFooter className="background footer">
                 <div style={{ display: 'flex' }}>
-                    <IonButton size="large" class="background strip-shadow footer-btn"  >
-                        <IonIcon id="icon-footer" md={shareSocialOutline} />
-                        <IonLabel id="label-footer">Share</IonLabel>            
-                    </IonButton>
+ 
                     <IonButton onClick={() => editEventBtn()} size="large" class="background strip-shadow footer-btn" >
                         <IonIcon id="icon-footer" md={pencilOutline} />
                         <IonLabel id="label-footer">Edit</IonLabel>                       
