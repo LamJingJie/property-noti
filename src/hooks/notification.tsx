@@ -112,7 +112,7 @@ export async function createNotification(id:number, date: Date, title: string, a
                     data_dategroup: dategroup
                 },
                 iconColor: '#0000FF',
-                schedule: { at: new Date(Date.now() + 1000 * 5) }, 
+                schedule: { at: date }, 
             }
         ]
     })
