@@ -62,7 +62,6 @@ const Apps: React.FC = () => {
 
   LocalNotifications.addListener('localNotificationActionPerformed', (notificationAction: ActionPerformed)=> {
     console.log("Notification Clicked: " + notificationAction.notification);
-    alert("Notification Clicked");
     if(check_ln){  
       //Save into notification local storage
 
