@@ -360,7 +360,7 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any, res
                             </small>
                         </FormGroup>
 
-                        <FormGroup className="formgroup" disabled={true}>
+                        <FormGroup className="formgroup">
 
                             <div id="label-txt">All Day</div>
 

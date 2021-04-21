@@ -139,17 +139,6 @@ const Home: React.FC = (props) => {
 
     useIonViewWillEnter(()=>{       
         resetState();
-        /*propertySubscription = jingjie().subscribe((data: any)=>{
-            
-            console.log("Start");
-            if(data){
-                console.log(data);
-                setPropData((datas: any) => [...datas, data]);
-            }else{
-                console.log("Empty");
-                setPropData([]);
-            }         
-        });*/
         /*bsubject.subscribe((data: any) =>{
             console.log("HIIII");
             getProperty().then((async res=>{
@@ -203,11 +192,6 @@ const Home: React.FC = (props) => {
         if(propertySubscription){
             propertySubscription.unsubscribe();
         }   
-        /*
-        if(unsub_get){
-            unsub_get();
-        }*/
-        //console.log("leave");
     })
 
     return(

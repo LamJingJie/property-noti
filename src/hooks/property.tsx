@@ -81,10 +81,7 @@ export function getProperty(): Promise<Property[]> {
 
 
 //retrieve
-/*export function jingjie(): Observable<any> {
-    return subject.asObservable();
-    
-}*/
+
 
 export const propertyService = {
     sendProperty: (prop: any)=> subject.next(prop), //use this for subsequent refresh, for when u add, edit or del property

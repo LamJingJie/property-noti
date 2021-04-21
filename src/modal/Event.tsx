@@ -30,7 +30,7 @@ import {
   } from 'ionicons/icons';
 
 //CRUD
-import { getProperty, Property, delProperty, propertyService, get_location_from_address } from '../hooks/property';
+import { getProperty, Property, delProperty, propertyService, get_location_from_address, editProperty } from '../hooks/property';
 import { deleteNotification, createNotification } from '../hooks/notification';
 
 //Title & Menu function
@@ -59,10 +59,13 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
     //Subscription
     let eventSub: Subscription;
 
+    //Load
+    const [showLoading, setShowLoading] = useState(false);
+    const [showLoadingMap, setShowLoadingMap] = useState(false);
+
     const history = useHistory();
     const [event, setEvent] = useState<any>();
     const [showDelete, setShowDelete] = useState(false);
-    const [showLoading, setShowLoading] = useState(false);
     const [msg, setMsg] = useState<string>();
     const [showToast, setShowToast] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);//ensure modal is completely initialized before loading map
@@ -74,6 +77,8 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
     const onPresent = ()=>{    
         
         setEvent(props.data);  
+
+        //check if latitude and longitude is invalid (0,0)
         if(props.data?.latitude === 0 && props.data?.longitude === 0){
             setlatlongErr(true);
         }    
@@ -81,6 +86,8 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
             setlatlongErr(false);
             //console.log(res);
             setEvent(res);
+
+            //check if latitude and longitude is invalid (0,0)
             if(res.latitude === 0 && res.longitude === 0){
                 setlatlongErr(true);
             }
@@ -89,19 +96,30 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
     }
 
     const refreshmap = ()=>{
+        setShowLoadingMap(true);
         get_location_from_address(event?.address).then((val => {
             if (val === null || val == undefined) {
                 showToast_function("No Internet or Invalid Address!");
+                setShowLoadingMap(false);
                 return;
             }
             let result: NativeGeocoderResult[] = val;
 
-            event.latitude = result[0].latitude;
+            event.latitude =  result[0].latitude;
             event.longitude = result[0].longitude;
-           
-            propertyService.sendOneProperty(event);
+
+            //update localstorage for event with the updated latitude and longitude
+            editProperty(event).then((async res=>{
+                propertyService.sendOneProperty(event);//for subscription in 'event.tsx'. Returns only the updated object
+                propertyService.sendProperty(res);//for the subscription in the 'home.tsx'. Returns entire list of updated array      
+                setShowLoadingMap(false); 
+            })).catch((err=>{
+                setShowLoadingMap(false);
+                showToast_function(err);
+            }))         
             
         })).catch((err=>{
+            setShowLoadingMap(false);
             showToast_function(err);
         }))
     }
@@ -109,8 +127,6 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
     const onDidPresent=()=>{
         setIsLoaded(true);
     }
-
-
 
     const onDimiss = async ()=>{
         setIsLoaded(false);
@@ -141,12 +157,20 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
     return(
         <IonModal animated={true} swipeToClose={true}  onWillPresent={() => onPresent()} onDidPresent={()=> onDidPresent()} onWillDismiss={() => onDimiss()} isOpen={props.modal} cssClass="content">
             
-             <IonLoading
+            <IonLoading
                 cssClass='my-custom-class'
                 isOpen={showLoading}
                 message={'Deleting...'}
                 onDidDismiss={() => setShowLoading(false)}
             />
+
+            <IonLoading
+                cssClass='my-custom-class'
+                isOpen={showLoadingMap}
+                message={'Mapping...'}
+                onDidDismiss={() => setShowLoadingMap(false)}
+            />
+
              <IonHeader class="header">
                 <IonToolbar>
                     <IonButtons slot="start"  onClick={() => onDimiss()}>
@@ -180,7 +204,7 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
                             //Wait for modal to finish loading before initializing the map. 
                             //To prevent the map from initializing beforehand that causes the center of the map to be
                             //on the top-left corner of the app on mobile devices.
-                            <MapContainer key={state.keyMAP} id="google-map" className="map-container" center={[event?.latitude, event?.longitude]} zoom={15} scrollWheelZoom={false} zoomAnimation={true}>
+                            <MapContainer key={state.keyMAP} id="google-map" className="map-container" center={[event?.latitude, event?.longitude]} zoom={18} scrollWheelZoom={false} zoomAnimation={true}>
                                 <TileLayer
                                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -190,7 +214,6 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
                                         {event?.address}
                                     </Popup>
                                 </Marker>
-
                             </MapContainer>
                         }
 
@@ -214,7 +237,6 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
             </IonContent>
             <IonFooter className="background footer">
                 <div style={{ display: 'flex' }}>
- 
                     <IonButton onClick={() => editEventBtn()} size="large" class="background strip-shadow footer-btn" >
                         <IonIcon id="icon-footer" md={pencilOutline} />
                         <IonLabel id="label-footer">Edit</IonLabel>                       
@@ -255,8 +277,7 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
                             })).catch((err=>{
                                 setShowLoading(false);
                                 showToast_function(err);
-                            }))
-                            
+                            }))                           
                         }
                     }
                 ]}
@@ -278,13 +299,11 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
                 ]}
             />
 
-
             <EditEvent modal2={showEditEvent} setShowModal2={setShowEditEvent} data2={event!} />   
             
         </IonModal>
  
     );
-
 }
 
 export default Event;
