@@ -23,7 +23,13 @@ export interface Property{
     end: Date,
     noti: Date,
     longitude: number,
-    latitude: number
+    latitude: number,
+    price: number,
+    ownerno: number,
+    ownername: string,
+    tenantno:number,
+    tenantname: string,
+    size: string,
 }
 
 

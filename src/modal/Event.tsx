@@ -26,7 +26,7 @@ import {
     archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp,
     trashOutline, trashSharp, warningOutline, warningSharp, homeSharp, homeOutline, calendarSharp, calendarOutline,
     addCircleOutline, addCircle, addCircleSharp, addSharp, arrowBackSharp, backspace, text, shareSocialOutline, pencilOutline, trashBinOutline,
-    locationOutline, timeOutline, refreshOutline
+    locationOutline, timeOutline, refreshOutline, bodyOutline, callOutline, idCardOutline, manOutline, expandOutline, pricetagOutline
   } from 'ionicons/icons';
 
 //CRUD
@@ -43,11 +43,7 @@ import PageDesign from '../components/pageDesign';
 import EditEvent from './EditEvent';
 
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
-/*
-TO-DO:
 
-1. Calculate the latlong on Event.tsx load rather than saving it in 
-*/
 
 const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: any}> =  props => {
     //map
@@ -109,7 +105,7 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
             event.longitude = result[0].longitude;
 
             //update localstorage for event with the updated latitude and longitude
-            editProperty(event).then((async res=>{
+            editProperty(event).then((res=>{
                 propertyService.sendOneProperty(event);//for subscription in 'event.tsx'. Returns only the updated object
                 propertyService.sendProperty(res);//for the subscription in the 'home.tsx'. Returns entire list of updated array      
                 setShowLoadingMap(false); 
@@ -155,7 +151,7 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
 
 
     return(
-        <IonModal animated={true} swipeToClose={true}  onWillPresent={() => onPresent()} onDidPresent={()=> onDidPresent()} onWillDismiss={() => onDimiss()} isOpen={props.modal} cssClass="content">
+        <IonModal animated={true} swipeToClose={true}  onWillPresent={() => onPresent()} onDidPresent={()=> onDidPresent()} onDidDismiss={() => onDimiss()} isOpen={props.modal} cssClass="content">
             
             <IonLoading
                 cssClass='my-custom-class'
@@ -181,13 +177,16 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
             </IonHeader>
             <IonContent style={{height:'100%'}}>    
             
-                <div className="content_event" >
+                <div className="content_event">
                     <div className="grid-container">
                         <IonIcon id="title-icon" className='icon' color="secondary" md={text} />
                         <IonText id="title-txt" className='text end-of-item-event' >{event?.title}</IonText>
 
                         <IonIcon id="address-icon" className='icon' color="secondary" md={locationOutline} />
                         <IonText id="address-txt" className='text end-of-item-event' >{event?.address}</IonText>
+
+                        <IonIcon id="price-icon" className='icon' color="secondary" md={pricetagOutline} />
+                        <IonText id="price-txt" className='text end-of-item-event' >${event?.price}</IonText>
 
                         <IonIcon id="time-icon" className='icon' color="secondary" md={timeOutline} />
                         <div id="time-txt" className="text end-of-item-event">
@@ -198,6 +197,27 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
                                 <div className="time-content" id="allday">All day</div>
                             }
                         </div>
+
+                        <IonTitle id="owner-title" className='text' >Owner</IonTitle>
+
+                        <IonIcon id="ownername-icon" className='icon' color="secondary" md={bodyOutline} />
+                        <IonText id="ownername-txt" className='text end-of-item-event' >{event?.ownername}</IonText>
+
+                        <IonIcon id="ownerno-icon" className='icon' color="secondary" md={callOutline} />
+                        <IonText id="ownerno-txt" className='text end-of-item-event' >{event?.ownerno}</IonText>
+
+                        <IonTitle id="tenant-title" className='text' >Tenant</IonTitle>
+
+                        <IonIcon id="tenantname-icon" className='icon' color="secondary" md={manOutline} />
+                        <IonText id="tenantname-txt" className='text end-of-item-event' >{event?.tenantname}</IonText>
+
+                        <IonIcon id="tenantno-icon" className='icon' color="secondary" md={idCardOutline} />
+                        <IonText id="tenantno-txt" className='text end-of-item-event' >{event?.tenantno}</IonText>
+
+                        <IonIcon id="size-icon" className='icon' color="secondary" md={expandOutline} />
+                        <IonText id="size-txt" className='text end-of-item-event' >{event?.size}</IonText>
+
+                        
 
                         {isLoaded === true && latlongErr === false &&
 
@@ -269,7 +289,7 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
                             setShowLoading(true);
                             delProperty(event?.id).then((async res=>{
                                 await deleteNotification(event?.id);
-                                console.log(res);
+                                //console.log(res);
                                 propertyService.sendProperty(res);                               
                                 onDimiss();
                                 setShowLoading(false);

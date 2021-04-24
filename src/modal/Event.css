@@ -2,7 +2,7 @@
 
 .icon{
     width:100%;
-    font-size: 22px;
+    font-size: 18px;
 }
 
 .text{
@@ -34,11 +34,19 @@
     /*grid-template-columns: repeat(1, 1fr 7fr);
     grid-template-rows: repeat(3, 1fr);*/
     grid-template-columns: 1fr minmax(80%, 85%);
-    grid-template-rows: minmax(30px, auto) minmax(30px, auto) minmax(30px, auto) minmax(200px, auto);
+    grid-template-rows: minmax(30px, auto) minmax(30px, auto) minmax(30px, auto) minmax(30px, auto)
+    minmax(30px, auto) minmax(30px, auto) minmax(30px, auto) minmax(30px, auto) minmax(30px, auto)
+    minmax(30px, auto) minmax(30px, auto)  minmax(200px, auto);
     gap: 15px;
-    row-gap: 35px;
+    row-gap: 25px;
     
 }
+/*price: number,
+    ownerno: number,
+    ownername: string,
+    tenantno:number,
+    tenantname: string,
+    size: string, */
 
 /*Title info*/
 #title-icon{
@@ -62,25 +70,105 @@
     grid-row: 2;
 }
 
-/*Time info*/
-#time-icon{
+/*price info*/
+#price-icon{
     grid-column: 1;
     grid-row: 3;
 }
 
-#time-txt{
+#price-txt{
     grid-column: 2;
     grid-row: 3;
+}
+
+/*size info*/
+#size-icon{
+    grid-column: 1;
+    grid-row: 4;
+}
+
+#size-txt{
+    grid-column: 2;
+    grid-row: 4;
+}
+
+/*Time info*/
+#time-icon{
+    grid-column: 1;
+    grid-row: 5;
+}
+
+#time-txt{
+    grid-column: 2;
+    grid-row: 5;
 }
 
 .time-content{
     padding-bottom: 15px;
 }
 
+/*ownername info*/
+
+#owner-title{
+    grid-column: 2;
+    grid-row: 6;
+    font-weight: bold;
+    font-size: 19px;
+}
+#ownername-icon{
+    grid-column: 1;
+    grid-row: 7;
+}
+
+#ownername-txt{
+    grid-column: 2;
+    grid-row: 7;
+}
+
+/*ownerno info*/
+#ownerno-icon{
+    grid-column: 1;
+    grid-row: 8;
+}
+
+#ownerno-txt{
+    grid-column: 2;
+    grid-row: 8;
+}
+
+/*tenantname info*/
+#tenant-title{
+    grid-column: 2;
+    grid-row: 9;
+    font-weight: bold;
+    font-size: 19px;
+}
+
+#tenantname-icon{
+    grid-column: 1;
+    grid-row: 10;
+}
+
+#tenantname-txt{
+    grid-column: 2;
+    grid-row: 10;
+}
+
+/*tenantno info*/
+#tenantno-icon{
+    grid-column: 1;
+    grid-row: 11;
+}
+
+#tenantno-txt{
+    grid-column: 2;
+    grid-row: 11;
+}
+
 
 #google-map{
     grid-column: 1 / span 2;
-    grid-row: 4;
+    grid-row: 12;
     height:100%;
     width:100%;
 }

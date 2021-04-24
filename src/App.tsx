@@ -76,10 +76,14 @@ const Apps: React.FC = () => {
   //So, the idea of this is to override the default back btn on android and manually add the code
   //that checks the current state and act accordingly depending on the current state.
   let bckbtn = App.addListener('backButton', ()=>{
+    //alert(window.history.state);
     if(window.history.state === 'home' || window.history.state === 'about'){  
-      BackgroundMode.overrideBackButton();
+      //alert("Background");
+      //BackgroundMode.overrideBackButton();
+      BackgroundMode.moveToBackground();
       //App.exitApp();
     }else{  
+      //alert("window-back");
       window.history.back();
     }
   });

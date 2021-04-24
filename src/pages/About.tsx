@@ -30,6 +30,12 @@ import { Subscription } from 'rxjs';
 //local notification
 import { deleteNotification, createNotification } from '../hooks/notification';
 
+/*
+TO-DO:
+
+1. Write shit on this page about what the application is about.
+*/
+
 const About: React.FC = () => {
     let subscription: Subscription;
     const [messages, setMessages] = useState<any>([]);
@@ -46,8 +52,10 @@ const About: React.FC = () => {
         messageService.clearMessages();
     }*/
 
-    const createNoti=async ()=>{
-        createNotification(1, new Date(), "Title", "address", "dategroup", "End Date").then((res=>{
+    /*const createNoti=async ()=>{
+        let testdate: Date = new Date(2021, 3, 24, 15, 50, 0, 0)
+        console.log(testdate);
+        createNotification(1, testdate, "Title", "address", "dategroup", "End Date").then((res=>{
             console.log(res);
             console.log("Created!");
         })).catch((err=>{
@@ -76,7 +84,7 @@ const About: React.FC = () => {
          })).catch((err=>{
              console.log(err);
          }))
-     }
+     }*/
 
      const setState = () => {
          window.history.replaceState('about','about',null);
@@ -105,16 +113,57 @@ const About: React.FC = () => {
         //subscription.unsubscribe();
     })
 
-   
+   /*Btn for testing*/
+   //<IonButton onClick={()=>createNoti()}>Create noti</IonButton>
     return(
         <IonPage>
             <ExploreContainer name={"About"} />
 
             <IonContent class="content"  fullscreen>
-                <IonButton onClick={()=> createNoti()}>Create Noti</IonButton>
-                <IonButton onClick={()=> createNoti2()}>Create Noti2</IonButton>
-                <IonButton onClick={()=> deleteNoti()}>Delete Noti</IonButton>
-                <IonButton onClick={()=> updateNoti()}>Update Noti</IonButton>
+                
+                <div id="about-info">
+                    <IonTitle id="about-title">Welcome to Property-Noti!</IonTitle>
+                    <IonCard className="background strip-shadow">
+                        <IonCardHeader color="white" id="card-header">
+                            <IonCardTitle id="card-title">About Us</IonCardTitle>
+                        </IonCardHeader>
+                        <IonCardContent id="no-spacing">
+                            <ul>
+                                <li>
+                                    I am from Singapore and I build applications like this for fun. This application is the first app that I have built on my spare time and so, if there is any issues
+                                    do feel free to contact me at <b>jingjie105@hotmail.com</b>! 
+                                </li>
+                                <li>
+                                    I build this application to practice and keep-up my coding skills especially since I have graduated from my school.
+                                    And now, awaiting for my enlistment. And I am bored at home.
+                                </li>
+                            </ul>                 
+                            
+                        </IonCardContent>
+                    </IonCard>
+                    <IonCard className="background strip-shadow">
+                        <IonCardHeader color="white" id="card-header">
+                            <IonCardTitle id="card-title">About App</IonCardTitle>
+                        </IonCardHeader>
+                        <IonCardContent id="no-spacing">
+                            <ul>
+                                <li>
+                                    This application sends notification to your device based on the events that you set beforehand. It will
+                                    be sent at 12am. The <b>Notification Date</b> cannot be after the <b>End Date</b>, and you cannot select any date
+                                    before tomorrow (including today).
+                                </li>
+                             
+                                <li>
+                                    Doesn't require internet to function (except when getting the latitude and longitude of the address during the Adding or Editing of an event).
+                                </li>
+                                <li>
+                                    Data is stored in your device cache.
+                                </li>
+                            </ul>         
+                    </IonCardContent>
+                    </IonCard>
+                </div>
+               
 
                 <PageDesign />
             </IonContent>

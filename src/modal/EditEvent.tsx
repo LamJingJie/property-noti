@@ -78,6 +78,12 @@ const EditEvent: React.FC<{modal2:boolean,setShowModal2: any, data2: any}> = (pr
     end: moment(props.data2?.end?.toString()).format('YYYY-MM-DD'),
     noti: moment(props.data2?.noti?.toString()).format('YYYY-MM-DD'),
     allDay: props.data2?.allDay,
+    price: props.data2?.price,
+    ownerno: props.data2?.ownerno,
+    ownername: props.data2?.ownername,
+    tenantno: props.data2?.tenantno,
+    tenantname: props.data2?.tenantname,
+    size: props.data2?.size
   }
 
   const { reset, register, handleSubmit, errors, control, formState, setValue, getValues } = useForm({
@@ -173,19 +179,45 @@ const EditEvent: React.FC<{modal2:boolean,setShowModal2: any, data2: any}> = (pr
         value: 8,
         message: "Password must have at least 8 characters"
       }*/
+    },
+    price: {
+      required: "Price of property needed",
+    },
+    ownerno: {
+      required: "Owner Number needed",
+      minLength: {
+        value: 8,
+        message: "Tenant Number must have at least 8 numbers"
+      }
+    },
+    ownername: {
+      required: "Owner Name needed",
+    },
+    tenantno: {
+      required: "Tenant Number needed",
+      minLength: {
+        value: 8,
+        message: "Tenant Number must have at least 8 numbers"
+      }
+    },
+    tenantname: {
+      required: "Tenant Name needed"
+    },
+    size: {
+      required: "Property Size needed"
     }
   };
 
 
   return (
-    <IonModal animated={true} swipeToClose={true} onWillPresent={() => onPresent()} onDidDismiss={() => onDimiss()} isOpen={props.modal2} cssClass="content">
+    <IonModal id="modal" animated={true} swipeToClose={true} onWillPresent={() => onPresent()} onDidDismiss={() => onDimiss()} isOpen={props.modal2} cssClass="content">
        <IonLoading
                 cssClass='my-custom-class'
                 isOpen={showLoading}
                 message={'Updating...'}
                 onDidDismiss={() => setShowLoading(false)}
         />
-      <Form onSubmit={handleSubmit(submitForm)} style={{ height: '100%', width: '100%' }}>
+      <Form id="data-content"  onSubmit={handleSubmit(submitForm)} style={{ height: '100%', width: '100%' }}>
         <IonHeader class="header">
           <IonToolbar>
             <IonButtons slot="start" onClick={() => onDimiss()}>
@@ -258,6 +290,168 @@ const EditEvent: React.FC<{modal2:boolean,setShowModal2: any, data2: any}> = (pr
                   {errors.address && errors.address.message}
                 </small>
               </FormGroup>
+              <FormGroup className="formgroup">
+                                <IonItem className="formitem">
+                                    <IonLabel position="floating">Price</IonLabel>
+
+                                    <Controller
+                                        /*
+                                          Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                          resetted for the client side. So you need to add it with the 'value' props inside 
+                                          the curly braces.
+        
+                                          Only on IONIC component that needs to be done like this. For others, can just use the
+                                          standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                          and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                          E.g. as={<input type="number" />}
+                                        */
+                                        render={({ onChange, onBlur, value }) => (<IonInput type="number" value={value} onIonChange={onChange} />)}
+                                        control={control}
+                                        name="price"
+                                        rules={validationOptions.price}
+                                    />
+
+                                </IonItem>
+
+                                <small className="error-msg">
+                                    {errors.price && errors.price.message}
+                                </small>
+                            </FormGroup>
+                            <FormGroup className="formgroup">
+                                <IonItem className="formitem">
+                                    <IonLabel position="floating">Owner Name</IonLabel>
+
+                                    <Controller
+                                        /*
+                                          Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                          resetted for the client side. So you need to add it with the 'value' props inside 
+                                          the curly braces.
+        
+                                          Only on IONIC component that needs to be done like this. For others, can just use the
+                                          standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                          and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                          E.g. as={<input type="number" />}
+                                        */
+                                        render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
+                                        control={control}
+                                        name="ownername"
+                                        rules={validationOptions.ownername}
+                                    />
+
+                                </IonItem>
+
+                                <small className="error-msg">
+                                    {errors.ownername && errors.ownername.message}
+                                </small>
+                            </FormGroup>
+                            <FormGroup className="formgroup">
+                                <IonItem className="formitem">
+                                    <IonLabel position="floating">Owner Number</IonLabel>
+
+                                    <Controller
+                                        /*
+                                          Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                          resetted for the client side. So you need to add it with the 'value' props inside 
+                                          the curly braces.
+        
+                                          Only on IONIC component that needs to be done like this. For others, can just use the
+                                          standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                          and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                          E.g. as={<input type="number" />}
+                                        */
+                                        render={({ onChange, onBlur, value }) => (<IonInput type="number" value={value} onIonChange={onChange} />)}
+                                        control={control}
+                                        name="ownerno"
+                                        rules={validationOptions.ownerno}
+                                    />
+
+                                </IonItem>
+
+                                <small className="error-msg">
+                                    {errors.ownerno && errors.ownerno.message}
+                                </small>
+                            </FormGroup>
+                            <FormGroup className="formgroup">
+                                <IonItem className="formitem">
+                                    <IonLabel position="floating">Tenant Name</IonLabel>
+
+                                    <Controller
+                                        /*
+                                          Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                          resetted for the client side. So you need to add it with the 'value' props inside 
+                                          the curly braces.
+        
+                                          Only on IONIC component that needs to be done like this. For others, can just use the
+                                          standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                          and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                          E.g. as={<input type="number" />}
+                                        */
+                                        render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
+                                        control={control}
+                                        name="tenantname"
+                                        rules={validationOptions.tenantname}
+                                    />
+
+                                </IonItem>
+
+                                <small className="error-msg">
+                                    {errors.tenantname && errors.tenantname.message}
+                                </small>
+                            </FormGroup>
+                            <FormGroup className="formgroup">
+                                <IonItem className="formitem">
+                                    <IonLabel position="floating">Tenant Number</IonLabel>
+
+                                    <Controller
+                                        /*
+                                          Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                          resetted for the client side. So you need to add it with the 'value' props inside 
+                                          the curly braces.
+        
+                                          Only on IONIC component that needs to be done like this. For others, can just use the
+                                          standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                          and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                          E.g. as={<input type="number" />}
+                                        */
+                                        render={({ onChange, onBlur, value }) => (<IonInput type="number" value={value} onIonChange={onChange} />)}
+                                        control={control}
+                                        name="tenantno"
+                                        rules={validationOptions.tenantno}
+                                    />
+
+                                </IonItem>
+
+                                <small className="error-msg">
+                                    {errors.tenantno && errors.tenantno.message}
+                                </small>
+                            </FormGroup>
+                            <FormGroup className="formgroup">
+                                <IonItem className="formitem">
+                                    <IonLabel position="floating">Property Size</IonLabel>
+
+                                    <Controller
+                                        /*
+                                          Need to add the 'value' parameter because otherwise, the value displayed will not be
+                                          resetted for the client side. So you need to add it with the 'value' props inside 
+                                          the curly braces.
+        
+                                          Only on IONIC component that needs to be done like this. For others, can just use the
+                                          standard method in which u can just replace the 'render' parameter with the 'as' parameter
+                                          and in the 'as' parameter, you can just input the IONIC component inside the curly braces
+                                          E.g. as={<input type="number" />}
+                                        */
+                                        render={({ onChange, onBlur, value }) => (<IonInput value={value} onIonChange={onChange} />)}
+                                        control={control}
+                                        name="size"
+                                        rules={validationOptions.size}
+                                    />
+
+                                </IonItem>
+
+                                <small className="error-msg">
+                                    {errors.size && errors.size.message}
+                                </small>
+                            </FormGroup>
             </IonCard>
 
             <FormGroup className="formgroup">
@@ -338,7 +532,7 @@ const EditEvent: React.FC<{modal2:boolean,setShowModal2: any, data2: any}> = (pr
               </small>
             </FormGroup>
 
-            <FormGroup className="formgroup"disabled={true}>
+            <FormGroup id="allday2" className="formgroup"disabled={true}>
 
               <div id="label-txt">All Day</div>
 

@@ -116,15 +116,17 @@ const Home: React.FC = (props) => {
    
     const eventSelect = (event: object) =>{
         //console.log(event);
+        window.history.replaceState('event', 'event', null);
         setSelectedEvent(event);
         setShowEvent(true);
-        window.history.replaceState('event', 'event', null);
+        
         //history.push('/page/home/event');  
     }
 
     const addPropModal = () =>{
-        setAdd_Modal(true);
         window.history.replaceState('addProperty', 'addProperty', null);
+        setAdd_Modal(true);
+        
     }
 
     useIonViewDidEnter(()=>{
@@ -210,7 +212,7 @@ const Home: React.FC = (props) => {
                         endAccessor="end"
                         popup={false}
                         showAllEvents={false}
-                        defaultView='week'
+                        defaultView='day'
                         onShowMore={(events, date) => {
                             //console.log(events);
                             console.log(date);
@@ -219,7 +221,7 @@ const Home: React.FC = (props) => {
                             setPopoverData(events);
                         }}
                         onSelectEvent={event => eventSelect(event)}
-                        views={['month', 'week', 'agenda']}
+                        views={['month', 'week', 'day']}
                         events={propData}
                         style={{ height: '80%' }}
                     />
