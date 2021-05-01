@@ -40,19 +40,14 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any, res
     const today: Date = new Date();
     const today_convert: string = Moment(today.toString()).format('YYYY-MM-DD');
     const tmr: string = Moment((new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0,0,0,0)).toString()).format('YYYY-MM-DD');
-    /*price: number,
-    ownerno: number,
-    ownername: string,
-    tenantno:number,
-    tenantname: string,
-    size: number,*/
-
+    const today_time: string = Moment().format('YYYY-MM-DDTHH:mm');
+    //console.log(today_time);
     const initialValues = {
         title: '',
         address: '',
         start: today_convert,
         end:  tmr,
-        noti:  tmr,
+        noti:  today_time,
         allDay: true,
         price: 0,
         ownerno: 88888888,
@@ -546,7 +541,7 @@ const AddProperty: React.FC<{modal:boolean,showModal: any, setPropData: any, res
                                   and in the 'as' parameter, you can just input the IONIC component inside the curly braces
                                   E.g. as={<input type="number" />}
                                 */
-                                render={({ onChange, onBlur, value }) => (<IonInput value={value} min={tmr} type="date" onIonChange={onChange} />)}
+                                render={({ onChange, onBlur, value }) => (<IonInput value={value} min={today_time} type="datetime-local" onIonChange={onChange} />)}
                                 control={control}
                                 name="noti"
                                 rules={validationOptions.noti}

@@ -192,7 +192,7 @@ const Event: React.FC <{modal:boolean,setShowModal: any, data: any, resetState: 
                         <div id="time-txt" className="text end-of-item-event">
                             <div className="time-content text">Start: {moment(event?.start?.toString()).format('dddd MMMM D YYYY')}</div>
                             <div className="time-content">End: {moment(event?.end?.toString()).format('dddd MMMM D YYYY')}</div>
-                            <div className="time-content">Notify: {moment(event?.noti?.toString()).format('dddd MMMM D YYYY')}</div>
+                            <div className="time-content">Notify: {moment(event?.noti?.toString()).format('dddd MMMM D YYYY HH:mm')}</div>
                             {event?.allDay === true &&
                                 <div className="time-content" id="allday">All day</div>
                             }

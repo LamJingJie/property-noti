@@ -149,7 +149,7 @@ const About: React.FC = () => {
                             <ul>
                                 <li>
                                     This application sends notification to your device based on the events that you set beforehand. It will
-                                    be sent at 12am. The <b>Notification Date</b> cannot be after the <b>End Date</b>, and you cannot select any date
+                                    be sent at the time that you chose. The <b>Notification Date</b> cannot be after the <b>End Date</b>, and you cannot select any date
                                     before tomorrow (including today).
                                 </li>
                              

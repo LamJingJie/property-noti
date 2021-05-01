@@ -84,7 +84,7 @@ const Apps: React.FC = () => {
       //App.exitApp();
     }else{  
       //alert("window-back");
-      window.history.back();
+      //window.history.back();
     }
   });
 

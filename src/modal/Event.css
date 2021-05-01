@@ -2,12 +2,12 @@
 
 .icon{
     width:100%;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .text{
     width:100%;
-    font-size: 16px;
+    font-size: 15px;
 }
 
 
@@ -113,7 +113,7 @@
     grid-column: 2;
     grid-row: 6;
     font-weight: bold;
-    font-size: 19px;
+    font-size: 18px;
 }
 #ownername-icon{
     grid-column: 1;
